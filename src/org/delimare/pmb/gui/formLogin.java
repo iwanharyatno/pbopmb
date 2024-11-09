@@ -6,6 +6,7 @@
 package org.delimare.pmb.gui;
 
 import javax.swing.JFrame;
+import org.delimare.pmb.Constants;
 import org.delimare.pmb.entity.Admin;
 import org.delimare.pmb.entitymanager.AdminManager;
 import org.delimare.pmb.function.Alert;
@@ -195,11 +196,14 @@ public class FormLogin extends javax.swing.JFrame {
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         if (isInputValid()) {
-            boolean success = adminManager.login(txtUsername.getText(), txtPassword.getText());
-            if (success) {
+            Admin admin = adminManager.login(txtUsername.getText(), txtPassword.getText());
+            if (admin != null) {
                 Alert.info("Login berhasil!");
                 
+                Constants.currentAdmin = admin;
                 Utils.openFrame(this, new FormUtama(), true);
+            } else {
+                Alert.warning("Akun tidak ditemukan");
             }
         }
     }//GEN-LAST:event_btnLoginActionPerformed

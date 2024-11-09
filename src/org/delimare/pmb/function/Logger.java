@@ -10,9 +10,9 @@ package org.delimare.pmb.function;
  */
 public class Logger {
     public static void error(Object o, String msg) {
-        System.err.println("[" + o.getClass().getPackageName() + "] ERROR: " + msg);
+        System.err.println("[" + o.getClass().getPackageName() + "." + o.getClass().getSimpleName() + "] ERROR: " + msg);
     }
     public static void error(Class c, String msg) {
-        System.err.println("[" + c.getPackageName() + "] ERROR: " + msg);
+        System.err.println("[" + c.getPackageName() + "." + c.getSimpleName() + "] ERROR: " + msg);
     }
 }

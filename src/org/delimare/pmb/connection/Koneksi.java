@@ -16,9 +16,9 @@ public class Koneksi {
         Connection con = null;
         
         try {
-            String db = "pmb_mania";
+            String db = "pmbmania";
             String sv = "jdbc:mysql://localhost:3306/" + db;
-            String driver = "com.mysql.cj.jdbc.Driver";
+            String driver = "com.mysql.jdbc.Driver";
             
             Class.forName(driver);
             con = DriverManager.getConnection(sv, "root", "");
