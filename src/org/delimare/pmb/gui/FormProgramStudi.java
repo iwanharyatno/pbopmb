@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package javaapplication41;
+package org.delimare.pmb.gui;
 /**
  *
  * @author LENOVO
  */
-public class tambahPeserta extends javax.swing.JFrame {
+public class FormProgramStudi extends javax.swing.JFrame {
 
     /**
      * Creates new form tambahPeserta
      */
-    public tambahPeserta() {
+    public FormProgramStudi() {
         initComponents();
     }
 
@@ -191,7 +191,7 @@ public class tambahPeserta extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
-        new formUtama().setVisible(true);
+        new FormUtama().setVisible(true);
         dispose();
     }//GEN-LAST:event_btnKeluarActionPerformed
 
@@ -212,20 +212,21 @@ public class tambahPeserta extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(tambahPeserta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormProgramStudi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(tambahPeserta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormProgramStudi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(tambahPeserta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormProgramStudi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(tambahPeserta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FormProgramStudi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new tambahPeserta().setVisible(true);
+                new FormProgramStudi().setVisible(true);
             }
         });
     }
