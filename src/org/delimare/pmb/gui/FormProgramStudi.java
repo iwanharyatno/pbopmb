@@ -4,17 +4,77 @@
  * and open the template in the editor.
  */
 package org.delimare.pmb.gui;
+
+import java.util.List;
+import javax.swing.JOptionPane;
+import org.delimare.pmb.entity.ProgramStudi;
+import org.delimare.pmb.entitymanager.ProgramStudiManager;
+import org.delimare.pmb.function.Alert;
+import org.delimare.pmb.function.Logger;
+import org.delimare.pmb.gui.tables.JTableProgramStudi;
+
 /**
  *
  * @author LENOVO
  */
 public class FormProgramStudi extends javax.swing.JFrame {
+    
+    private JTableProgramStudi tableModel;
+    private ProgramStudiManager manager;
 
     /**
      * Creates new form tambahPeserta
      */
     public FormProgramStudi() {
         initComponents();
+        
+        setLocationRelativeTo(null);
+        
+        init();
+    }
+    
+    private void init() {
+        tableModel = new JTableProgramStudi();
+        manager = new ProgramStudiManager();
+        
+        loadData();
+    }
+    
+    private void loadData() {
+        try {
+            List<ProgramStudi> result = manager.getSemuaProdi(txtCariProdi.getText());
+            tableModel.setList(result);
+            
+            tableProgramStudi.setModel(tableModel);
+        } catch (Exception e) {
+            Logger.error(this, "Gagal memuat data program studi: " + e.getMessage());
+        }
+    }
+    
+    private boolean inputValid() {
+        if (txtKodeProdi.getText().length() == 0) {
+            Alert.warning("Kode Prodi harus diisi");
+            return false;
+        }
+        
+        if (txtNamaProdi.getText().length() == 0) {
+            Alert.warning("Nama Prodi harus diisi");
+            return false;
+        }
+        
+        if (txtKuotaProdi.getText().length() == 0) {
+            Alert.warning("Kuota Prodi harus diisi");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    private void clear() {
+        txtKodeProdi.setText("");
+        txtNamaProdi.setText("");
+        txtKuotaProdi.setText("");
+        comboFakultas.setSelectedIndex(0);
     }
 
     /**
@@ -27,29 +87,35 @@ public class FormProgramStudi extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnSimpan = new javax.swing.JButton();
         btnKeluar = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        btnUbah = new javax.swing.JButton();
+        btnHapus = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        txtKuotaProdi = new javax.swing.JTextField();
+        txtKodeProdi = new javax.swing.JTextField();
+        txtNamaProdi = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        comboFakultas = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableProgramStudi = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        txtCariProdi = new javax.swing.JTextField();
+        btnBersihkan = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel2.setText("Nama Program Studi");
 
-        jButton1.setText("Simpan");
+        btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         btnKeluar.setText("Keluar");
         btnKeluar.addActionListener(new java.awt.event.ActionListener() {
@@ -58,17 +124,55 @@ public class FormProgramStudi extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setText("Ubah");
+        btnUbah.setText("Ubah");
+        btnUbah.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahActionPerformed(evt);
+            }
+        });
 
-        jButton4.setText("Hapus");
+        btnHapus.setText("Hapus");
+        btnHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHapusActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Fakultas");
+
+        txtKuotaProdi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtKuotaProdiActionPerformed(evt);
+            }
+        });
+        txtKuotaProdi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtKuotaProdiKeyReleased(evt);
+            }
+        });
+
+        txtKodeProdi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtKodeProdiActionPerformed(evt);
+            }
+        });
+
+        txtNamaProdi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNamaProdiActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Kode Prodi");
 
         jLabel5.setText("Kuota Prodi");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboFakultas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ilmu Komputer", "Bisnis dan Ilmu Sosial" }));
+        comboFakultas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboFakultasActionPerformed(evt);
+            }
+        });
 
         jLabel6.setBackground(new java.awt.Color(0, 51, 255));
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
@@ -86,7 +190,7 @@ public class FormProgramStudi extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableProgramStudi.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -97,9 +201,27 @@ public class FormProgramStudi extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tableProgramStudi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableProgramStudiMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableProgramStudi);
 
         jLabel1.setText("Cari Prodi ");
+
+        txtCariProdi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCariProdiKeyReleased(evt);
+            }
+        });
+
+        btnBersihkan.setText("Bersihkan");
+        btnBersihkan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBersihkanActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -110,31 +232,33 @@ public class FormProgramStudi extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addGap(28, 28, 28)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jButton3)
-                                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtNamaProdi, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                     .addComponent(jLabel4)
                                     .addGap(86, 86, 86)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(txtKodeProdi, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel3))
                                 .addGap(81, 81, 81)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jTextField1)
+                                    .addComponent(txtKuotaProdi)
                                     .addComponent(jLabel6)
-                                    .addComponent(jComboBox1, 0, 210, Short.MAX_VALUE)))))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(comboFakultas, 0, 210, Short.MAX_VALUE)))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(layout.createSequentialGroup()
-                            .addComponent(jButton1)
-                            .addGap(68, 68, 68)
-                            .addComponent(jButton4))
+                            .addComponent(btnSimpan)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnHapus)
+                            .addGap(18, 18, 18)
+                            .addComponent(btnUbah)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnBersihkan))
                         .addComponent(btnKeluar, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -142,7 +266,7 @@ public class FormProgramStudi extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(14, 14, 14)
-                        .addComponent(jTextField4)))
+                        .addComponent(txtCariProdi)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -155,35 +279,36 @@ public class FormProgramStudi extends javax.swing.JFrame {
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtKodeProdi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtCariProdi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(30, 30, 30)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNamaProdi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2))
                                 .addGap(30, 30, 30)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtKuotaProdi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel5))
                                 .addGap(28, 28, 28)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel3)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(comboFakultas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(5, 5, 5)
                                 .addComponent(jLabel6)
                                 .addGap(30, 30, 30)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jButton1)
-                                    .addComponent(jButton4)
-                                    .addComponent(jButton3))
+                                    .addComponent(btnSimpan)
+                                    .addComponent(btnHapus)
+                                    .addComponent(btnUbah)
+                                    .addComponent(btnBersihkan))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnKeluar, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 22, Short.MAX_VALUE)))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -194,6 +319,78 @@ public class FormProgramStudi extends javax.swing.JFrame {
         new FormUtama().setVisible(true);
         dispose();
     }//GEN-LAST:event_btnKeluarActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        if (inputValid()) {
+            manager.insert(new ProgramStudi(txtKodeProdi.getText(), txtNamaProdi.getText(), comboFakultas.getSelectedItem().toString(), Integer.parseInt(txtKuotaProdi.getText())));
+            loadData();
+            
+            clear();
+        }
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void comboFakultasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboFakultasActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboFakultasActionPerformed
+
+    private void txtKuotaProdiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKuotaProdiKeyReleased
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtKuotaProdiKeyReleased
+
+    private void tableProgramStudiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableProgramStudiMouseClicked
+        int row = tableProgramStudi.rowAtPoint(evt.getPoint());
+        
+        txtKodeProdi.setText(tableProgramStudi.getValueAt(row, 0).toString());
+        txtNamaProdi.setText(tableProgramStudi.getValueAt(row, 1).toString());
+        comboFakultas.setSelectedItem(tableProgramStudi.getValueAt(row, 2).toString());
+        txtKuotaProdi.setText(tableProgramStudi.getValueAt(row, 3).toString());
+    }//GEN-LAST:event_tableProgramStudiMouseClicked
+
+    private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
+        if (inputValid()) {
+            manager.update(new ProgramStudi(txtKodeProdi.getText(), txtNamaProdi.getText(), comboFakultas.getSelectedItem().toString(), Integer.parseInt(txtKuotaProdi.getText())));
+            loadData();
+            
+            clear();
+        }
+    }//GEN-LAST:event_btnUbahActionPerformed
+
+    private void btnHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapusActionPerformed
+        if (txtKodeProdi.getText().length() == 0) {
+            Alert.warning("Pilih salah satu data untuk dihapus");
+            return;
+        }
+        
+        int result = Alert.confirm("Yakin ingin menghapus data prodi ini?");
+        if (result == JOptionPane.YES_OPTION) {
+            manager.delete(txtKodeProdi.getText());
+            loadData();
+            
+            clear();
+        }
+    }//GEN-LAST:event_btnHapusActionPerformed
+
+    private void txtCariProdiKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariProdiKeyReleased
+        loadData();
+    }//GEN-LAST:event_txtCariProdiKeyReleased
+
+    private void btnBersihkanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBersihkanActionPerformed
+        clear();
+    }//GEN-LAST:event_btnBersihkanActionPerformed
+
+    private void txtKodeProdiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKodeProdiActionPerformed
+        txtNamaProdi.requestFocus();
+    }//GEN-LAST:event_txtKodeProdiActionPerformed
+
+    private void txtNamaProdiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaProdiActionPerformed
+        txtKuotaProdi.requestFocus();
+    }//GEN-LAST:event_txtNamaProdiActionPerformed
+
+    private void txtKuotaProdiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKuotaProdiActionPerformed
+        comboFakultas.requestFocus();
+    }//GEN-LAST:event_txtKuotaProdiActionPerformed
 
     /**
      * @param args the command line arguments
@@ -232,11 +429,12 @@ public class FormProgramStudi extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBersihkan;
+    private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnKeluar;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JButton btnSimpan;
+    private javax.swing.JButton btnUbah;
+    private javax.swing.JComboBox<String> comboFakultas;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -245,10 +443,11 @@ public class FormProgramStudi extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTable tableProgramStudi;
+    private javax.swing.JTextField txtCariProdi;
+    private javax.swing.JTextField txtKodeProdi;
+    private javax.swing.JTextField txtKuotaProdi;
+    private javax.swing.JTextField txtNamaProdi;
     // End of variables declaration//GEN-END:variables
+
 }

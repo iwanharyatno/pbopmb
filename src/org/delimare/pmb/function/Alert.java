@@ -17,4 +17,8 @@ public class Alert {
     public static void warning(String message) {
         JOptionPane.showMessageDialog(null, message, "Peringatan", JOptionPane.WARNING_MESSAGE);
     }
+    
+    public static int confirm(String question) {
+        return JOptionPane.showConfirmDialog(null, question, "Konfirmasi", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    }
 }

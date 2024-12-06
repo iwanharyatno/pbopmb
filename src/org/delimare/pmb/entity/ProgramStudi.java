@@ -12,6 +12,13 @@ import java.util.Date;
  * @author MyBook Z Series
  */
 public class ProgramStudi {
+
+    public ProgramStudi(String kode, String nama, String fakultas, int kuota) {
+        this.kuota = kuota;
+        this.kode = kode;
+        this.nama = nama;
+        this.fakultas = fakultas;
+    }
     private int kuota;
     private String kode, nama, fakultas;
     private Date createdAt, updatedAt;

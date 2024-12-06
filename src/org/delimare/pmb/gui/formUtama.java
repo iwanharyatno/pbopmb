@@ -184,7 +184,7 @@ public class FormUtama extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnProgramStudiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProgramStudiActionPerformed
-        new FormProgramStudi().setVisible(true);
+        Utils.openFrame(this, new FormProgramStudi(), true);
         dispose();
     }//GEN-LAST:event_btnProgramStudiActionPerformed
 
