@@ -13,6 +13,6 @@ public class Logger {
         System.err.println("[" + o.getClass().getPackage()+ "." + o.getClass().getSimpleName() + "] ERROR: " + msg);
     }
     public static void error(Class c, String msg) {
-        System.err.println("[" + c.getPackage() + "." + c.getSimpleName() + "] ERROR: " + msg);
+        System.err.println("[" + c.getPackage().getName()+ "." + c.getSimpleName() + "] ERROR: " + msg);
     }
 }
