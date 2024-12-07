@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /build/
 =======
 /build/
@@ -8,3 +9,21 @@
 =======
 /nbproject/private/
 >>>>>>> 2530349e2b11d38dda14c3828b8ae6b61c88c957
+=======
+# NetBeans specific #
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# Class Files #
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+>>>>>>> 7c49daaaa879e538cbfd3f59f8354cc11b3bc3d4
