@@ -6,6 +6,7 @@ package org.delimare.pmb.entitymanager;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import org.delimare.pmb.entity.Fakultas;
 import org.delimare.pmb.entity.ProgramStudi;
 import org.delimare.pmb.function.Fungsi;
 import org.delimare.pmb.function.Logger;
@@ -55,11 +56,11 @@ public class ProgramStudiManager {
         return result;
     }
     
-    public ArrayList<ProgramStudi> getSemuaProdi(String pencarian) {
+    public ArrayList<ProgramStudi> getSemua(String pencarian) {
         ArrayList<ProgramStudi> hasil = new ArrayList<>();
         
         try {
-            String sql = "SELECT kode_prodi, nama_prodi, fakultas, kuota FROM program_studi WHERE nama_prodi LIKE '%" + pencarian + "%' OR fakultas LIKE '" + pencarian + "' OR kode_prodi = '" + pencarian + "'";
+            String sql = "SELECT kode_prodi, nama_prodi, fakultas, nama_fakultas, kuota FROM program_studi INNER JOIN fakultas ON fakultas.kode_fakultas = program_studi.fakultas WHERE nama_prodi LIKE '%" + pencarian + "%' OR fakultas LIKE '" + pencarian + "' OR kode_prodi = '" + pencarian + "'";
             ResultSet res = Fungsi.getResult(sql);
             
             while (res.next()) {
@@ -67,7 +68,8 @@ public class ProgramStudiManager {
                         res.getString("kode_prodi"),
                         res.getString("nama_prodi"),
                         res.getString("fakultas"),
-                        res.getInt("kuota")
+                        res.getInt("kuota"),
+                        new Fakultas(res.getString("fakultas"), res.getString("nama_fakultas"))
                 ));
             }
         } catch (Exception e) {

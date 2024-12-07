@@ -19,9 +19,26 @@ public class ProgramStudi {
         this.nama = nama;
         this.fakultas = fakultas;
     }
+    
+    public ProgramStudi(String kode, String nama, String fakultas, int kuota, Fakultas fakultasObj) {
+        this.kuota = kuota;
+        this.kode = kode;
+        this.nama = nama;
+        this.fakultas = fakultas;
+        this.fakultasObj = fakultasObj;
+    }
     private int kuota;
     private String kode, nama, fakultas;
     private Date createdAt, updatedAt;
+    private Fakultas fakultasObj;
+
+    public Fakultas getFakultasObj() {
+        return fakultasObj;
+    }
+
+    public void setFakultasObj(Fakultas fakultasObj) {
+        this.fakultasObj = fakultasObj;
+    }
 
     public int getKuota() {
         return kuota;

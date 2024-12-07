@@ -135,9 +135,9 @@ public class FormLogin extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(0, 51, 204));
         jLabel7.setText("lupa password?");
 
-        jLabel8.setText("password");
+        jLabel8.setText("Password");
 
-        jLabel9.setText("username");
+        jLabel9.setText("Username");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
