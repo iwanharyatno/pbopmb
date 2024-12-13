@@ -6,11 +6,16 @@
 package org.delimare.pmb.gui;
 
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import org.delimare.pmb.entity.Fakultas;
 import org.delimare.pmb.entity.ProgramStudi;
+import org.delimare.pmb.entitymanager.FakultasManager;
 import org.delimare.pmb.entitymanager.ProgramStudiManager;
 import org.delimare.pmb.function.Alert;
 import org.delimare.pmb.function.Logger;
+import org.delimare.pmb.function.Utils;
+import org.delimare.pmb.gui.events.EventFormClosed;
 import org.delimare.pmb.gui.tables.JTableProgramStudi;
 
 /**
@@ -21,6 +26,7 @@ public class FormProgramStudi extends javax.swing.JFrame {
     
     private JTableProgramStudi tableModel;
     private ProgramStudiManager manager;
+    private FakultasManager fakultasManager;
 
     /**
      * Creates new form tambahPeserta
@@ -36,13 +42,28 @@ public class FormProgramStudi extends javax.swing.JFrame {
     private void init() {
         tableModel = new JTableProgramStudi();
         manager = new ProgramStudiManager();
+        fakultasManager = new FakultasManager();
         
         loadData();
+        loadComboFakultas();
+    }
+    
+    private void loadComboFakultas() {
+        try {
+            List<Fakultas> result = fakultasManager.getSemua("");
+            comboFakultas.removeAllItems();
+            
+            comboFakultas.setModel(new DefaultComboBoxModel(result.toArray()));
+            
+            tableProgramStudi.setModel(tableModel);
+        } catch (Exception e) {
+            Logger.error(this, "Gagal memuat data program studi: " + e.getMessage());
+        }
     }
     
     private void loadData() {
         try {
-            List<ProgramStudi> result = manager.getSemuaProdi(txtCariProdi.getText());
+            List<ProgramStudi> result = manager.getSemua(txtCariProdi.getText());
             tableModel.setList(result);
             
             tableProgramStudi.setModel(tableModel);
@@ -178,6 +199,11 @@ public class FormProgramStudi extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 0, 10)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(51, 51, 255));
         jLabel6.setText("Tambah Fakultas?");
+        jLabel6.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel6MouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -322,7 +348,8 @@ public class FormProgramStudi extends javax.swing.JFrame {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         if (inputValid()) {
-            manager.insert(new ProgramStudi(txtKodeProdi.getText(), txtNamaProdi.getText(), comboFakultas.getSelectedItem().toString(), Integer.parseInt(txtKuotaProdi.getText())));
+            Fakultas item = (Fakultas) comboFakultas.getSelectedItem();
+            manager.insert(new ProgramStudi(txtKodeProdi.getText(), txtNamaProdi.getText(), item.getKode(), Integer.parseInt(txtKuotaProdi.getText())));
             loadData();
             
             clear();
@@ -344,13 +371,15 @@ public class FormProgramStudi extends javax.swing.JFrame {
         
         txtKodeProdi.setText(tableProgramStudi.getValueAt(row, 0).toString());
         txtNamaProdi.setText(tableProgramStudi.getValueAt(row, 1).toString());
-        comboFakultas.setSelectedItem(tableProgramStudi.getValueAt(row, 2).toString());
-        txtKuotaProdi.setText(tableProgramStudi.getValueAt(row, 3).toString());
+        Fakultas selected = new Fakultas(tableProgramStudi.getValueAt(row, 2).toString(), tableProgramStudi.getValueAt(row, 3).toString());
+        comboFakultas.setSelectedItem(selected);
+        txtKuotaProdi.setText(tableProgramStudi.getValueAt(row, 4).toString());
     }//GEN-LAST:event_tableProgramStudiMouseClicked
 
     private void btnUbahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahActionPerformed
         if (inputValid()) {
-            manager.update(new ProgramStudi(txtKodeProdi.getText(), txtNamaProdi.getText(), comboFakultas.getSelectedItem().toString(), Integer.parseInt(txtKuotaProdi.getText())));
+            Fakultas item = (Fakultas) comboFakultas.getSelectedItem();
+            manager.update(new ProgramStudi(txtKodeProdi.getText(), txtNamaProdi.getText(), item.getKode(), Integer.parseInt(txtKuotaProdi.getText())));
             loadData();
             
             clear();
@@ -391,6 +420,17 @@ public class FormProgramStudi extends javax.swing.JFrame {
     private void txtKuotaProdiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKuotaProdiActionPerformed
         comboFakultas.requestFocus();
     }//GEN-LAST:event_txtKuotaProdiActionPerformed
+
+    private void jLabel6MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel6MouseClicked
+        FormFakultas fFakultas = new FormFakultas();
+        fFakultas.setFormClosed(new EventFormClosed() {
+            @Override
+            public void onClosed() {
+                loadComboFakultas();
+            }
+        });
+        Utils.openFrame(this, fFakultas, false);
+    }//GEN-LAST:event_jLabel6MouseClicked
 
     /**
      * @param args the command line arguments
