@@ -3,11 +3,26 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
-            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmb/src/org/delimare/pmb/gui/Main.java</file>
-            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmb/src/org/delimare/pmb/gui/FormAbout.java</file>
-            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
-            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmb/src/org/delimare/pmb/gui/FormLogin.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/BiodataOrangTua.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/RiwayatPendidikan.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/Alamat.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/Fakultas.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/AlamatManager.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormTambahPeserta.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/Agama.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/FakultasManager.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/function/Fungsi.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormAbout.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/AdminManager.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/StatusPerkawinan.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/StatusPendaftaran.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/RiwayatPendidikanManager.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/BiodataOrangTuaManager.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/CalonMahasiswa.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/CalonMahasiswaManager.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/ProgramStudi.java</file>
         </group>
     </open-files>
 </project-private>

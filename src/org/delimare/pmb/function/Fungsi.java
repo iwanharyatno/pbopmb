@@ -27,6 +27,23 @@ public class Fungsi {
         return i;
     }
     
+    public static int EQueryReturnsID(String sql) {
+        int i = 0;
+        try {
+            Connection con = db.getConnection();
+            Statement stmt = con.createStatement();
+            stmt.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = stmt.getGeneratedKeys();
+            if (rs.next()) {
+                i = rs.getInt(1);
+            }
+        } catch (Exception e) {
+            Logger.error(Fungsi.class, e.getMessage());
+        }
+        
+        return i;
+    }
+    
     public static ResultSet getResult(String sql) {
         int i = 0;
         
