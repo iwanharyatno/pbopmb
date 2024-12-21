@@ -211,12 +211,13 @@ public class FormUtama extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-Utils.openFrame(this, new FormAbout(), true);
+    Utils.openFrame(this, new FormAbout(), true);
         dispose();        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        Utils.openFrame(this, new FormTambahPeserta(), true);
+        dispose();  
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
