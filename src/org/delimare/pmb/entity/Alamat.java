@@ -9,8 +9,8 @@ package org.delimare.pmb.entity;
  * @author MyBook Z Series
  */
 public class Alamat {
-    private int id, kodePos;
-    private String rt, rw, kecamatan, kabupaten, provinsi, alamat;
+    private int id, kodePos, rt, rw;
+    private String kecamatan, kabupaten, provinsi, alamat;
 
     public int getId() {
         return id;
@@ -28,22 +28,22 @@ public class Alamat {
         this.kodePos = kodePos;
     }
 
-    public String getRt() {
+    public int getRt() {
         return rt;
     }
 
-    public void setRt(String rt) {
+    public void setRt(int rt) {
         this.rt = rt;
     }
 
-    public String getRw() {
+    public int getRw() {
         return rw;
     }
 
-    public void setRw(String rw) {
+    public void setRw(int rw) {
         this.rw = rw;
     }
-
+    
     public String getKecamatan() {
         return kecamatan;
     }

@@ -5,17 +5,60 @@
  */
 package org.delimare.pmb.gui;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
+import org.delimare.pmb.connection.Koneksi;
+import org.delimare.pmb.entity.CalonMahasiswa;
+import org.delimare.pmb.entitymanager.PesertaManager;
+import org.delimare.pmb.function.Logger;
+import org.delimare.pmb.gui.dialog.DialogUbahStatusPendaftaran;
+import org.delimare.pmb.gui.events.EventFormClosed;
+import org.delimare.pmb.gui.tables.JTablePeserta;
+
 /**
  *
  * @author smart user
  */
 public class FormPeserta extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FormPeserta
-     */
+    private PesertaManager manager;
+    private JTablePeserta sTable;
+
+    private CalonMahasiswa calon;
+    
+    private Koneksi db;
+
     public FormPeserta() {
         initComponents();
+
+        setLocationRelativeTo(null);
+        
+        db = new Koneksi();
+        manager = new PesertaManager();
+        sTable = new JTablePeserta();
+
+        tablePeserta.setModel(sTable);
+
+        loadData();
+    }
+
+    private void loadData() {
+        try {
+            sTable.setList(manager.getSemua(""));
+        } catch (Exception e) {
+            Logger.error(this, e.getMessage());
+            Logger.error(this, e.getStackTrace()[0].toString());
+        }
     }
 
     /**
@@ -28,15 +71,17 @@ public class FormPeserta extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablePeserta = new javax.swing.JTable();
         btn_simpan = new javax.swing.JButton();
         btn_hapus = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        btnUbahStatus = new javax.swing.JButton();
+        btnCetakReport = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablePeserta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -47,15 +92,39 @@ public class FormPeserta extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tablePeserta.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablePesertaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablePeserta);
 
         btn_simpan.setText("Simpan");
 
         btn_hapus.setText("Hapus");
 
         jButton3.setText("Tambah Peserta");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Ubah");
+
+        btnUbahStatus.setText("Ubah status");
+        btnUbahStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUbahStatusActionPerformed(evt);
+            }
+        });
+
+        btnCetakReport.setText("Cetak Report");
+        btnCetakReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCetakReportActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -64,7 +133,7 @@ public class FormPeserta extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 774, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1058, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btn_simpan, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
@@ -73,27 +142,74 @@ public class FormPeserta extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnUbahStatus, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnCetakReport, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_simpan)
-                    .addComponent(jButton4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                    .addComponent(jButton4)
+                    .addComponent(btnUbahStatus))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_hapus)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(btnCetakReport))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void btnUbahStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUbahStatusActionPerformed
+        DialogUbahStatusPendaftaran ubahStatus = new DialogUbahStatusPendaftaran(calon);
+        ubahStatus.setOnFormClosed(new EventFormClosed() {
+            @Override
+            public void onClosed() {
+                loadData();
+            }
+        });
+        ubahStatus.setVisible(true);
+    }//GEN-LAST:event_btnUbahStatusActionPerformed
+
+    private void tablePesertaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablePesertaMouseClicked
+        int row = tablePeserta.rowAtPoint(evt.getPoint());
+
+        int id = Integer.parseInt(tablePeserta.getValueAt(row, 0).toString());
+        String nama = tablePeserta.getValueAt(row, 1).toString();
+        String prodi = tablePeserta.getValueAt(row, 4).toString();
+        
+        calon = new CalonMahasiswa();
+        calon.setId(id);
+        calon.setNamaLengkap(nama);
+        calon.setProgramStudi(prodi);
+    }//GEN-LAST:event_tablePesertaMouseClicked
+
+    private void btnCetakReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakReportActionPerformed
+        try {
+            String current = new File(".").getAbsolutePath();
+            String path = current + "/src/org/delimare/pmb/gui/reports/CalonMahasiswaReport.jasper";
+            JasperReport jr = (JasperReport) JRLoader.loadObject(new FileInputStream(new File(path)));
+            JasperPrint jp = JasperFillManager.fillReport(jr, null, db.getConnection());
+            JasperViewer.viewReport(jp);
+        } catch (JRException ex) {
+            Logger.error(this, ex.getMessage());
+        } catch (FileNotFoundException ex) {
+            Logger.error(this, ex.getMessage());
+        }
+    }//GEN-LAST:event_btnCetakReportActionPerformed
 
     /**
      * @param args the command line arguments
@@ -131,11 +247,13 @@ public class FormPeserta extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCetakReport;
+    private javax.swing.JButton btnUbahStatus;
     private javax.swing.JButton btn_hapus;
     private javax.swing.JButton btn_simpan;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tablePeserta;
     // End of variables declaration//GEN-END:variables
 }

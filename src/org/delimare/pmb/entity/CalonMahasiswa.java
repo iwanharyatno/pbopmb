@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class CalonMahasiswa {
     private int id, jumlahAnak, tahunDaftar, idAlamat;
-    private String nikKtp, namaLengkap, tempatLahir, nisn, noTelepon, email, programStudi, agama, statusPerkawinan, statusPendaftaran;
+    private String nikKtp, namaLengkap, tempatLahir, nisn, noTelepon, email, programStudi, agama, statusPerkawinan, statusPendaftaran, jenisKelamnin;
     private Date tanggalLahir, createdAt, updatedAt;
 
     public int getId() {
@@ -141,6 +141,14 @@ public class CalonMahasiswa {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getJenisKelamnin() {
+        return jenisKelamnin;
+    }
+
+    public void setJenisKelamnin(String jenisKelamnin) {
+        this.jenisKelamnin = jenisKelamnin;
     }
 
     public Date getUpdatedAt() {

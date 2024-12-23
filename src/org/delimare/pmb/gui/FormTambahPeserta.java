@@ -5,17 +5,328 @@
  */
 package org.delimare.pmb.gui;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import org.delimare.pmb.connection.Koneksi;
+import org.delimare.pmb.entity.Alamat;
+import org.delimare.pmb.entity.BiodataOrangTua;
+import org.delimare.pmb.entity.CalonMahasiswa;
+import org.delimare.pmb.entity.ProgramStudi;
+import org.delimare.pmb.entity.RiwayatPendidikan;
+import org.delimare.pmb.entitymanager.AlamatManager;
+import org.delimare.pmb.entitymanager.BiodataOrangTuaManager;
+import org.delimare.pmb.entitymanager.CalonMahasiswaManager;
+import org.delimare.pmb.entitymanager.ProgramStudiManager;
+import org.delimare.pmb.entitymanager.RiwayatPendidikanManager;
+import org.delimare.pmb.function.Alert;
+import org.delimare.pmb.function.Logger;
+
 /**
  *
  * @author smart user
  */
 public class FormTambahPeserta extends javax.swing.JFrame {
 
+    private Koneksi db;
+    private Connection conn;
+
+    private AlamatManager alamatManager;
+    private ProgramStudiManager programStudiManager;
+    private CalonMahasiswaManager calonMahasiswaManager;
+    private RiwayatPendidikanManager riwayatPendidikanManager;
+    private BiodataOrangTuaManager biodataOrangTuaManager;
+
     /**
      * Creates new form FormTambahPeserta
      */
     public FormTambahPeserta() {
         initComponents();
+
+        db = new Koneksi();
+        alamatManager = new AlamatManager();
+        conn = db.getConnection();
+        programStudiManager = new ProgramStudiManager();
+        calonMahasiswaManager = new CalonMahasiswaManager();
+        riwayatPendidikanManager = new RiwayatPendidikanManager();
+        biodataOrangTuaManager = new BiodataOrangTuaManager();
+
+        loadComboProgramStudi();
+    }
+
+    private boolean inputValid() {
+        if (txtRt.getText().length() == 0) {
+            Alert.warning("Kolom RT wajib diisi");
+            return false;
+        }
+
+        if (txtRt.getText().length() == 0) {
+            Alert.warning("Kolom RW wajib diisi");
+            return false;
+        }
+
+        if (txtKecamatan.getText().length() == 0) {
+            Alert.warning("Kolom Kecamatan wajib diisi");
+            return false;
+        }
+
+        if (txtKabupaten.getText().length() == 0) {
+            Alert.warning("Kolom Kabupaten wajib diisi");
+            return false;
+        }
+
+        if (txtProvinsi.getText().length() == 0) {
+            Alert.warning("Kolom Provinsi wajib diisi");
+            return false;
+        }
+
+        if (txtKodePos.getText().length() == 0) {
+            Alert.warning("Kolom Kode Pos wajib diisi");
+            return false;
+        }
+
+        if (txtAlamat.getText().length() == 0) {
+            Alert.warning("Kolom Alamat wajib diisi");
+            return false;
+        }
+
+        if (txtNIKPeserta.getText().length() == 0) {
+            Alert.warning("Kolom NIK Peserta wajib diisi");
+            return false;
+        }
+
+        if (txtNamaPeserta.getText().length() == 0) {
+            Alert.warning("Kolom Nama Peserta wajib diisi");
+            return false;
+        }
+
+        if (txtTempatLahir.getText().length() == 0) {
+            Alert.warning("Kolom Tempat Lahir wajib diisi");
+            return false;
+        }
+
+        if (calendarTglLahir.getDate() == null) {
+            Alert.warning("Kolom Tanggal Lahir wajib diisi");
+            return false;
+        }
+
+        if (comboAgama.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Agama wajib diisi");
+            return false;
+        }
+
+        if (comboStatusPerkawinan.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Status Perkawinan wajib diisi");
+            return false;
+        }
+
+        if (txtJumlahAnak.getText().length() == 0) {
+            Alert.warning("Kolom Jumlah Anak wajib diisi");
+            return false;
+        }
+
+        if (txtNISN.getText().length() == 0) {
+            Alert.warning("Kolom NISN wajib diisi");
+            return false;
+        }
+
+        if (comboJenisKelamin.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Jenis Kelamin wajib diisi");
+            return false;
+        }
+
+        if (txtNoTelepon.getText().length() == 0) {
+            Alert.warning("Kolom No Telepon wajib diisi");
+            return false;
+        }
+
+        if (txtEmail.getText().length() == 0) {
+            Alert.warning("Kolom Email wajib diisi");
+            return false;
+        }
+
+        if (comboProgramStudi.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Program Studi wajib diisi");
+            return false;
+        }
+
+        if (numTahunDaftar.getYear() == 0) {
+            Alert.warning("Kolom Tahun Daftar wajib diisi");
+            return false;
+        }
+
+        if (comboStatusPendaftaran.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Status Pendaftaran wajib diisi");
+            return false;
+        }
+
+        if (txtNamaSekolahSd.getText().length() == 0) {
+            Alert.warning("Kolom Nama Sekolah SD wajib diisi");
+            return false;
+        }
+
+        if (txtNamaSekolahSMP.getText().length() == 0) {
+            Alert.warning("Kolom Nama Sekolah SMP wajib diisi");
+            return false;
+        }
+
+        if (txtNamaSekolahSMA.getText().length() == 0) {
+            Alert.warning("Kolom Nama Sekolah SMA wajib diisi");
+            return false;
+        }
+
+        if (txtNamaKabupatenSD.getText().length() == 0) {
+            Alert.warning("Kolom Nama Kabupaten SD wajib diisi");
+            return false;
+        }
+
+        if (txtNamaKabupatenSMP.getText().length() == 0) {
+            Alert.warning("Kolom Nama Kabupaten SMP wajib diisi");
+            return false;
+        }
+
+        if (txtNamaKabupatenSMA.getText().length() == 0) {
+            Alert.warning("Kolom Nama Kabupaten SMA wajib diisi");
+            return false;
+        }
+
+        if (txtNamaProvinsiSD.getText().length() == 0) {
+            Alert.warning("Kolom Nama Provinsi SD wajib diisi");
+            return false;
+        }
+
+        if (txtNamaProvinsiSMP.getText().length() == 0) {
+            Alert.warning("Kolom Nama Provinsi SMP wajib diisi");
+            return false;
+        }
+
+        if (txtNamaProvinsiSMA.getText().length() == 0) {
+            Alert.warning("Kolom Nama Provinsi SMA wajib diisi");
+            return false;
+        }
+
+        if (numTahunLulusSD.getYear() == 0) {
+            Alert.warning("Kolom Tahun Lulus SD wajib diisi");
+            return false;
+        }
+
+        if (numTahunLulusSMP.getYear() == 0) {
+            Alert.warning("Kolom Tahun Lulus SMP wajib diisi");
+            return false;
+        }
+
+        if (numTahunLulusSMA.getYear() == 0) {
+            Alert.warning("Kolom Tahun Lulus SMA wajib diisi");
+            return false;
+        }
+
+        if (txtNamaAyah.getText().length() == 0) {
+            Alert.warning("Kolom Nama Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtAlamatAyah.getText().length() == 0) {
+            Alert.warning("Kolom Alamat Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtPendidikanAyah.getText().length() == 0) {
+            Alert.warning("Kolom Pendidikan Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtPekerjaanAyah.getText().length() == 0) {
+            Alert.warning("Kolom Pekerjaan Ayah wajib diisi");
+            return false;
+        }
+
+        if (comboStatusAyah.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Status Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtNoHpAyah.getText().length() == 0) {
+            Alert.warning("Kolom No HP Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtNIPAyah.getText().length() == 0) {
+            Alert.warning("Kolom NIP Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtPangkatAyah.getText().length() == 0) {
+            Alert.warning("Kolom Pangkat Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtJabatanAyah.getText().length() == 0) {
+            Alert.warning("Kolom Jabatan Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtInstansiAyah.getText().length() == 0) {
+            Alert.warning("Kolom Instansi Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtNamaIbu.getText().length() == 0) {
+            Alert.warning("Kolom Nama Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtAlamatIbu.getText().length() == 0) {
+            Alert.warning("Kolom Alamat Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtPendidikanIbu.getText().length() == 0) {
+            Alert.warning("Kolom Pendidikan Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtPekerjaanIbu.getText().length() == 0) {
+            Alert.warning("Kolom Pekerjaan Ibu wajib diisi");
+            return false;
+        }
+
+        if (comboStatusIbu.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Status Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtNoHpIbu.getText().length() == 0) {
+            Alert.warning("Kolom No HP Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtNIPIbu.getText().length() == 0) {
+            Alert.warning("Kolom NIP Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtPangkatIbu.getText().length() == 0) {
+            Alert.warning("Kolom Pangkat Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtJabatanIbu.getText().length() == 0) {
+            Alert.warning("Kolom Jabatan Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtInstansiIbu.getText().length() == 0) {
+            Alert.warning("Kolom Instansi Ibu wajib diisi");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void loadComboProgramStudi() {
+        ArrayList<ProgramStudi> programStudi = programStudiManager.getSemua("");
+        comboProgramStudi.setModel(new DefaultComboBoxModel(programStudi.toArray()));
     }
 
     /**
@@ -57,8 +368,6 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         comboAgama = new javax.swing.JComboBox();
         jScrollPane7 = new javax.swing.JScrollPane();
         txtTempatLahir = new javax.swing.JTextPane();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        txtJenisKelamin = new javax.swing.JTextPane();
         jScrollPane9 = new javax.swing.JScrollPane();
         txtJumlahAnak = new javax.swing.JTextPane();
         jScrollPane10 = new javax.swing.JScrollPane();
@@ -66,8 +375,9 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         jScrollPane12 = new javax.swing.JScrollPane();
         txtNoTelepon = new javax.swing.JTextPane();
         comboStatusPendaftaran = new javax.swing.JComboBox();
-        txtComboProgramStudi = new javax.swing.JComboBox();
+        comboProgramStudi = new javax.swing.JComboBox();
         numTahunDaftar = new com.toedter.calendar.JYearChooser();
+        comboJenisKelamin = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -189,14 +499,21 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel1.setText("Biodata Peserta");
 
+        txtIDPeserta.setEditable(false);
         jScrollPane1.setViewportView(txtIDPeserta);
 
         jLabel2.setText("ID PESERTA");
 
         jLabel3.setText("NIK");
 
+        txtNIKPeserta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNIKPesertaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(txtNIKPeserta);
 
         jScrollPane3.setViewportView(txtNamaPeserta);
@@ -207,6 +524,11 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jLabel6.setText("TANGGAL LAHIR");
 
+        txtNISN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNISNKeyTyped(evt);
+            }
+        });
         jScrollPane5.setViewportView(txtNISN);
 
         jLabel7.setText("AGAMA");
@@ -235,17 +557,27 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jScrollPane7.setViewportView(txtTempatLahir);
 
-        jScrollPane8.setViewportView(txtJenisKelamin);
-
+        txtJumlahAnak.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtJumlahAnakKeyTyped(evt);
+            }
+        });
         jScrollPane9.setViewportView(txtJumlahAnak);
 
         jScrollPane10.setViewportView(txtEmail);
 
+        txtNoTelepon.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNoTeleponKeyTyped(evt);
+            }
+        });
         jScrollPane12.setViewportView(txtNoTelepon);
 
         comboStatusPendaftaran.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pending", "Lulus", "Tidak Lulus" }));
 
-        txtComboProgramStudi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboProgramStudi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        comboJenisKelamin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-laki", "Perempuan" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -256,60 +588,48 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addGap(74, 74, 74)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane2)
-                                    .addComponent(jScrollPane3)
-                                    .addComponent(jScrollPane7)))
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel8))
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(comboJenisKelamin, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel10)
-                                        .addComponent(jLabel11)
-                                        .addComponent(jLabel9)
-                                        .addComponent(jLabel12)
-                                        .addComponent(jLabel13)
-                                        .addComponent(jLabel8))
-                                    .addGap(30, 30, 30)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(comboStatusPerkawinan, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jScrollPane9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(numTahunDaftar, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtComboProgramStudi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(comboStatusPendaftaran, 0, 180, Short.MAX_VALUE))))
-                        .addContainerGap(7, Short.MAX_VALUE))
+                                    .addComponent(comboProgramStudi, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(comboStatusPendaftaran, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(comboAgama, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(comboStatusPerkawinan, javax.swing.GroupLayout.Alignment.LEADING, 0, 178, Short.MAX_VALUE))))
+                    .addComponent(calendarTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addGap(62, 62, 62)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(calendarTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addGap(7, 7, 7))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(comboAgama, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel15))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(74, 74, 74)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2)
+                            .addComponent(jScrollPane3)
+                            .addComponent(jScrollPane7)))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel15))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -332,21 +652,19 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(24, 24, 24)
-                        .addComponent(jLabel6)
-                        .addGap(89, 89, 89))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(calendarTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(jLabel6))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(calendarTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(comboAgama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(comboStatusPerkawinan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -364,9 +682,9 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel12))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(comboJenisKelamin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -375,7 +693,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel16)
-                            .addComponent(txtComboProgramStudi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(comboProgramStudi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -386,13 +704,15 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                             .addComponent(jLabel15)
                             .addComponent(comboStatusPendaftaran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(numTahunDaftar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel18.setText("BIODATA AYAH");
 
+        txtIdCalon.setEditable(false);
         jScrollPane4.setViewportView(txtIdCalon);
 
         jLabel19.setText("ID CALON");
@@ -435,10 +755,21 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jScrollPane21.setViewportView(txtPekerjaanAyah);
 
+        txtNoHpAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNoHpAyahKeyTyped(evt);
+            }
+        });
         jScrollPane22.setViewportView(txtNoHpAyah);
 
+        jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel23.setText("BIODATA IBU");
 
+        txtNoHpIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNoHpIbuKeyTyped(evt);
+            }
+        });
         jScrollPane24.setViewportView(txtNoHpIbu);
 
         jScrollPane18.setViewportView(txtNamaIbu);
@@ -607,13 +938,10 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel29)
                             .addComponent(jScrollPane16, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel30))))
+                            .addComponent(jScrollPane20, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel30, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -814,14 +1142,25 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        txtIdAlamat.setEditable(false);
         jScrollPane19.setViewportView(txtIdAlamat);
 
         jLabel48.setText("ID ");
 
+        txtRt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRtKeyTyped(evt);
+            }
+        });
         jScrollPane23.setViewportView(txtRt);
 
         jLabel49.setText("RT");
 
+        txtRw.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtRwKeyReleased(evt);
+            }
+        });
         jScrollPane32.setViewportView(txtRw);
 
         jLabel50.setText("RW");
@@ -838,6 +1177,11 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jScrollPane36.setViewportView(txtProvinsi);
 
+        txtKodePos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtKodePosKeyTyped(evt);
+            }
+        });
         jScrollPane37.setViewportView(txtKodePos);
 
         jLabel55.setText("KODE POS");
@@ -846,6 +1190,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jLabel56.setText("ALAMAT");
 
+        jLabel57.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel57.setText("ISI ALAMAT");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -853,44 +1198,44 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel56)
-                    .addComponent(jLabel55)
-                    .addComponent(jLabel54)
-                    .addComponent(jLabel52)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel49)
-                                .addComponent(jLabel50))
-                            .addGap(109, 109, 109)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jScrollPane23)
-                                .addComponent(jScrollPane32)
-                                .addComponent(jScrollPane33, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane34, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane36, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane37, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane38, javax.swing.GroupLayout.Alignment.TRAILING)))
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(jLabel48)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel56)
+                            .addComponent(jLabel55)
+                            .addComponent(jLabel54)
+                            .addComponent(jLabel52)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(jPanel4Layout.createSequentialGroup()
-                                    .addGap(142, 142, 142)
-                                    .addComponent(jLabel57))
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel49)
+                                        .addComponent(jLabel50))
+                                    .addGap(109, 109, 109)
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane23)
+                                        .addComponent(jScrollPane32)
+                                        .addComponent(jScrollPane33, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane34, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane36, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane37, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane38, javax.swing.GroupLayout.Alignment.TRAILING)))
                                 .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addComponent(jLabel48)
                                     .addGap(114, 114, 114)
-                                    .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(jLabel51))
+                                    .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel51)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(143, 143, 143)
+                        .addComponent(jLabel57)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addComponent(jLabel57)
-                .addGap(22, 22, 22)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel48)
                     .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -938,6 +1283,11 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         });
 
         btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         btnKelolaBerkas.setText("Kelola berkas pendaftaran...");
 
@@ -953,7 +1303,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 699, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -965,33 +1315,34 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                         .addComponent(jLabel34)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
                         .addComponent(btnKeluar)))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel32)
-                    .addComponent(jLabel34)
-                    .addComponent(btnKeluar))
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSimpan)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel32)
+                            .addComponent(jLabel34)
+                            .addComponent(btnKeluar))
                         .addGap(18, 18, 18)
-                        .addComponent(btnKelolaBerkas))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(15, 15, 15))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSimpan)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnKelolaBerkas))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -1028,6 +1379,181 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private void txtNamaKabupatenSMPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaKabupatenSMPActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNamaKabupatenSMPActionPerformed
+
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        if (inputValid()) {
+            try {
+                try {
+                    conn.setAutoCommit(false);
+                    Alamat alamat = new Alamat();
+                    alamat.setRt(Integer.parseInt(txtRt.getText()));
+                    alamat.setRw(Integer.parseInt(txtRw.getText()));
+                    alamat.setKecamatan(txtKecamatan.getText());
+                    alamat.setKabupaten(txtKabupaten.getText());
+                    alamat.setProvinsi(txtProvinsi.getText());
+                    alamat.setKodePos(Integer.parseInt(txtKodePos.getText()));
+                    alamat.setAlamat(txtAlamat.getText());
+                    int idAlamat = alamatManager.insert(alamat, conn);
+
+                    txtIdAlamat.setText(String.valueOf(idAlamat));
+
+                    CalonMahasiswa calonMahasiswa = new CalonMahasiswa();
+                    calonMahasiswa.setNikKtp(txtNIKPeserta.getText());
+                    calonMahasiswa.setNamaLengkap(txtNamaPeserta.getText());
+                    calonMahasiswa.setTempatLahir(txtTempatLahir.getText());
+                    calonMahasiswa.setTanggalLahir(calendarTglLahir.getDate());
+                    calonMahasiswa.setAgama(comboAgama.getSelectedItem().toString());
+                    calonMahasiswa.setStatusPerkawinan(comboStatusPerkawinan.getSelectedItem().toString());
+                    calonMahasiswa.setJumlahAnak(Integer.parseInt(txtJumlahAnak.getText()));
+                    calonMahasiswa.setNisn(txtNISN.getText());
+                    calonMahasiswa.setJenisKelamnin(comboJenisKelamin.getSelectedItem().toString());
+                    calonMahasiswa.setNoTelepon(txtNoTelepon.getText());
+                    calonMahasiswa.setEmail(txtEmail.getText());
+                    ProgramStudi selected = (ProgramStudi) comboProgramStudi.getSelectedItem();
+                    calonMahasiswa.setProgramStudi(selected.getKode());
+                    calonMahasiswa.setTahunDaftar(numTahunDaftar.getYear());
+                    calonMahasiswa.setStatusPendaftaran(comboStatusPendaftaran.getSelectedItem().toString());
+                    calonMahasiswa.setIdAlamat(idAlamat);
+                    int idCalon = calonMahasiswaManager.insert(calonMahasiswa, conn);
+
+                    txtIdCalon.setText(String.valueOf(idCalon));
+                    txtIDPeserta.setText(String.valueOf(idCalon));
+
+                    RiwayatPendidikan riwayatSd = new RiwayatPendidikan();
+                    riwayatSd.setSekolah("SD");
+                    riwayatSd.setNamaSekolah(txtNamaSekolahSd.getText());
+                    riwayatSd.setKabupaten(txtNamaKabupatenSD.getText());
+                    riwayatSd.setProvinsi(txtNamaProvinsiSD.getText());
+                    riwayatSd.setTahunLulus(numTahunLulusSD.getYear());
+                    riwayatSd.setIdCalon(idCalon);
+                    riwayatPendidikanManager.insert(riwayatSd, conn);
+
+                    RiwayatPendidikan riwayatSmp = new RiwayatPendidikan();
+                    riwayatSmp.setSekolah("SMP");
+                    riwayatSmp.setNamaSekolah(txtNamaSekolahSMP.getText());
+                    riwayatSmp.setKabupaten(txtNamaKabupatenSMP.getText());
+                    riwayatSmp.setProvinsi(txtNamaProvinsiSMP.getText());
+                    riwayatSmp.setTahunLulus(numTahunLulusSMP.getYear());
+                    riwayatSmp.setIdCalon(idCalon);
+                    riwayatPendidikanManager.insert(riwayatSmp, conn);
+
+                    RiwayatPendidikan riwayatSma = new RiwayatPendidikan();
+                    riwayatSma.setSekolah("SMA");
+                    riwayatSma.setNamaSekolah(txtNamaSekolahSMA.getText());
+                    riwayatSma.setKabupaten(txtNamaKabupatenSMA.getText());
+                    riwayatSma.setProvinsi(txtNamaProvinsiSMA.getText());
+                    riwayatSma.setTahunLulus(numTahunLulusSMA.getYear());
+                    riwayatSma.setIdCalon(idCalon);
+                    riwayatPendidikanManager.insert(riwayatSma, conn);
+
+                    Alamat alamatAyah = new Alamat();
+                    alamatAyah.setAlamat(txtAlamatAyah.getText());
+                    int idAlamatAyah = alamatManager.insert(alamatAyah, conn);
+
+                    Alamat alamatIbu = new Alamat();
+                    alamatIbu.setAlamat(txtAlamatIbu.getText());
+                    int idAlamatIbu = alamatManager.insert(alamatIbu, conn);
+
+                    BiodataOrangTua biodataOrangTua = new BiodataOrangTua();
+                    biodataOrangTua.setIdCalon(idCalon);
+                    biodataOrangTua.setIdAlamatAyah(idAlamatAyah);
+                    biodataOrangTua.setIdAlamatIbu(idAlamatIbu);
+
+                    biodataOrangTua.setNamaAyah(txtNamaAyah.getText());
+                    biodataOrangTua.setPendidikanAyah(txtPendidikanAyah.getText());
+                    biodataOrangTua.setPekerjaanAyah(txtPekerjaanAyah.getText());
+                    biodataOrangTua.setStatusAyah(comboStatusAyah.getSelectedItem().toString());
+                    biodataOrangTua.setPangkatAyah(txtPangkatAyah.getText());
+                    biodataOrangTua.setJabatanAyah(txtJabatanAyah.getText());
+                    biodataOrangTua.setInstansiAyah(txtInstansiAyah.getText());
+                    biodataOrangTua.setNoHpAyah(txtNoHpAyah.getText());
+                    biodataOrangTua.setNipAyah(txtNIPAyah.getText());
+
+                    biodataOrangTua.setNamaIbu(txtNamaIbu.getText());
+                    biodataOrangTua.setPendidikanIbu(txtPendidikanIbu.getText());
+                    biodataOrangTua.setPekerjaanIbu(txtPekerjaanIbu.getText());
+                    biodataOrangTua.setStatusIbu(comboStatusIbu.getSelectedItem().toString());
+                    biodataOrangTua.setPangkatIbu(txtPangkatIbu.getText());
+                    biodataOrangTua.setJabatanIbu(txtJabatanIbu.getText());
+                    biodataOrangTua.setInstansiIbu(txtInstansiIbu.getText());
+                    biodataOrangTua.setNoHpIbu(txtNoHpIbu.getText());
+                    biodataOrangTua.setNipIbu(txtNIPIbu.getText());
+
+                    biodataOrangTuaManager.insert(biodataOrangTua, conn);
+
+                    conn.commit();
+                } catch (SQLException e) {
+                    conn.rollback();
+                    Logger.error(this, e.getMessage());
+                    Logger.error(this, e.getStackTrace()[0].toString());
+
+                    txtIDPeserta.setText("");
+                    txtIdCalon.setText("");
+                    txtIdAlamat.setText("");
+                }
+            } catch (SQLException ex) {
+                Logger.error(this, ex.getMessage());
+
+                txtIDPeserta.setText("");
+                txtIdCalon.setText("");
+                txtIdAlamat.setText("");
+            }
+        }
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void txtNIKPesertaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNIKPesertaKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNIKPesertaKeyTyped
+
+    private void txtJumlahAnakKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtJumlahAnakKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtJumlahAnakKeyTyped
+
+    private void txtNISNKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNISNKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNISNKeyTyped
+
+    private void txtNoTeleponKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoTeleponKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNoTeleponKeyTyped
+
+    private void txtNoHpAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoHpAyahKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNoHpAyahKeyTyped
+
+    private void txtNoHpIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoHpIbuKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNoHpIbuKeyTyped
+
+    private void txtRtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRtKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtRtKeyTyped
+
+    private void txtRwKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRwKeyReleased
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtRwKeyReleased
+
+    private void txtKodePosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKodePosKeyTyped
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtKodePosKeyTyped
 
     /**
      * @param args the command line arguments
@@ -1070,6 +1596,8 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JButton btnSimpan;
     private com.toedter.calendar.JCalendar calendarTglLahir;
     private javax.swing.JComboBox comboAgama;
+    private javax.swing.JComboBox<String> comboJenisKelamin;
+    private javax.swing.JComboBox comboProgramStudi;
     private javax.swing.JComboBox comboStatusAyah;
     private javax.swing.JComboBox comboStatusIbu;
     private javax.swing.JComboBox comboStatusPendaftaran;
@@ -1167,7 +1695,6 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField5;
@@ -1179,7 +1706,6 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JTextPane txtAlamat;
     private javax.swing.JTextPane txtAlamatAyah;
     private javax.swing.JTextPane txtAlamatIbu;
-    private javax.swing.JComboBox txtComboProgramStudi;
     private javax.swing.JTextPane txtEmail;
     private javax.swing.JTextPane txtIDPeserta;
     private javax.swing.JTextPane txtIdAlamat;
@@ -1188,7 +1714,6 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JTextPane txtInstansiIbu;
     private javax.swing.JTextPane txtJabatanAyah;
     private javax.swing.JTextPane txtJabatanIbu;
-    private javax.swing.JTextPane txtJenisKelamin;
     private javax.swing.JTextPane txtJumlahAnak;
     private javax.swing.JTextPane txtKabupaten;
     private javax.swing.JTextPane txtKecamatan;

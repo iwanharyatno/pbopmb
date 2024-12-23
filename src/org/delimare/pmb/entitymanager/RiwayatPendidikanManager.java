@@ -1,5 +1,6 @@
 package org.delimare.pmb.entitymanager;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import org.delimare.pmb.entity.RiwayatPendidikan;
@@ -27,6 +28,22 @@ public class RiwayatPendidikanManager {
 
         return result;
     }
+    
+    public int insert(RiwayatPendidikan riwayat, Connection con) {
+        int result = 0;
+
+        try {
+            String sql = "INSERT INTO riwayat_pendidikan (id_calon, sekolah, nama_sekolah, kabupaten, provinsi, tahun_lulus) "
+                       + "VALUES (" + riwayat.getIdCalon() + ", '" + riwayat.getSekolah() + "', '" + riwayat.getNamaSekolah() + "', "
+                       + "'" + riwayat.getKabupaten() + "', '" + riwayat.getProvinsi() + "', " + riwayat.getTahunLulus() + ");";
+            result = Fungsi.EQuery(sql, con);
+        } catch (Exception e) {
+            result = -1;
+            Logger.error(this, e.getMessage());
+        }
+
+        return result;
+    }
 
     public int update(RiwayatPendidikan riwayat) {
         int result = 0;
@@ -44,6 +61,23 @@ public class RiwayatPendidikanManager {
 
         return result;
     }
+    
+    public int update(RiwayatPendidikan riwayat, Connection con) {
+        int result = 0;
+
+        try {
+            String sql = "UPDATE riwayat_pendidikan SET id_calon = " + riwayat.getIdCalon() + ", sekolah = '" + riwayat.getSekolah() + "', "
+                       + "nama_sekolah = '" + riwayat.getNamaSekolah() + "', kabupaten = '" + riwayat.getKabupaten() + "', "
+                       + "provinsi = '" + riwayat.getProvinsi() + "', tahun_lulus = " + riwayat.getTahunLulus() + " "
+                       + "WHERE id = " + riwayat.getId() + ";";
+            result = Fungsi.EQuery(sql, con);
+        } catch (Exception e) {
+            result = -1;
+            Logger.error(this, e.getMessage());
+        }
+
+        return result;
+    }
 
     public int delete(int id) {
         int result = 0;
@@ -51,6 +85,20 @@ public class RiwayatPendidikanManager {
         try {
             String sql = "DELETE FROM riwayat_pendidikan WHERE id = " + id + ";";
             result = Fungsi.EQuery(sql);
+        } catch (Exception e) {
+            result = -1;
+            Logger.error(this, e.getMessage());
+        }
+
+        return result;
+    }
+    
+    public int delete(int id, Connection con) {
+        int result = 0;
+
+        try {
+            String sql = "DELETE FROM riwayat_pendidikan WHERE id = " + id + ";";
+            result = Fungsi.EQuery(sql, con);
         } catch (Exception e) {
             result = -1;
             Logger.error(this, e.getMessage());
