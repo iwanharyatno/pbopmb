@@ -22,6 +22,7 @@ import org.delimare.pmb.entitymanager.ProgramStudiManager;
 import org.delimare.pmb.entitymanager.RiwayatPendidikanManager;
 import org.delimare.pmb.function.Alert;
 import org.delimare.pmb.function.Logger;
+import org.delimare.pmb.function.Utils;
 
 /**
  *
@@ -1290,6 +1291,11 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         });
 
         btnKelolaBerkas.setText("Kelola berkas pendaftaran...");
+        btnKelolaBerkas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnKelolaBerkasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1554,6 +1560,11 @@ public class FormTambahPeserta extends javax.swing.JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txtKodePosKeyTyped
+    private void btnKelolaBerkasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKelolaBerkasActionPerformed
+        // TODO add your handling code here:
+        Utils.openFrame(this, new FormBerkas(), true);
+        dispose();  
+    }//GEN-LAST:event_btnKelolaBerkasActionPerformed
 
     /**
      * @param args the command line arguments
