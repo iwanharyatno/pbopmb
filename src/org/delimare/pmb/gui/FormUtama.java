@@ -14,15 +14,15 @@ import org.delimare.pmb.function.Utils;
  * @author LENOVO
  */
 public class FormUtama extends javax.swing.JFrame {
-    
+
     /**
      * Creates new form menuUtama
      */
     public FormUtama() {
         initComponents();
-        
+
         setLocationRelativeTo(null);
-        
+
         lblNamaAdmin.setText(Constants.currentAdmin.getNamaLengkap());
     }
 
@@ -206,18 +206,17 @@ public class FormUtama extends javax.swing.JFrame {
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         Constants.currentAdmin = null;
-        
+
         Utils.openFrame(this, new FormLogin(), true);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    Utils.openFrame(this, new FormAbout(), true);
-        dispose();        
+        Utils.openFrame(this, new FormAbout(), true);
+        dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        Utils.openFrame(this, new FormTambahPeserta(), true);
-        dispose();  
+        Utils.openFrame(this, new FormPeserta(), false);
     }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
