@@ -3,7 +3,6 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-<<<<<<< HEAD
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/gui/FormRuangan.java</file>
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/gui/FormLogin.java</file>
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/gui/FormFakultas.java</file>
@@ -17,47 +16,7 @@
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/entity/ProgramStudi.java</file>
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/gui/tables/JTableProgramStudi.java</file>
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
-            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/gui/FormAbout.java</file>
-=======
-            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/Main.java</file>
-            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormTambahPeserta.java</file>
-            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormBerkas.java</file>
-            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormLogin.java</file>
-            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
->>>>>>> f2fd30ea2ef97b5cd00af8a2a97e74c9b8a545f5
-=======
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/dialog/DialogUbahStatusPendaftaran.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/BiodataOrangTua.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/RiwayatPendidikan.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/ProgramStudiManager.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/FakultasManager.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/tables/JTableFakultas.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/StatusPerkawinan.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/StatusPendaftaran.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/RiwayatPendidikanManager.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/BiodataOrangTuaManager.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormPeserta.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/CalonMahasiswaManager.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/Alamat.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/Fakultas.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/AlamatManager.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormTambahPeserta.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/Agama.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/tables/JTablePeserta.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/function/Fungsi.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormAbout.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/AdminManager.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/reports/CalonMahasiswaReport.jrxml</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/PesertaManager.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/CalonMahasiswa.java</file>
-            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/ProgramStudi.java</file>
->>>>>>> 694b0cf0f882436b8f62118dde379d8390e547a6
->>>>>>> e1ec857578cb697ea8cb016cb5bb286f80aeb681
+            <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/gui/FormGedung.java</file>
         </group>
     </open-files>
 </project-private>
