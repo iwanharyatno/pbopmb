@@ -4,7 +4,9 @@
  */
 package org.delimare.pmb.entity;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -14,6 +16,12 @@ public class CalonMahasiswa {
     private int id, jumlahAnak, tahunDaftar, idAlamat;
     private String nikKtp, namaLengkap, tempatLahir, nisn, noTelepon, email, programStudi, agama, statusPerkawinan, statusPendaftaran, jenisKelamnin;
     private Date tanggalLahir, createdAt, updatedAt;
+    
+    private Alamat alamat;
+    private BiodataOrangTua biodataOrangTua;
+    private ProgramStudi programStudiObj;
+    
+    private ArrayList<RiwayatPendidikan> riwayatPendidikan;
 
     public int getId() {
         return id;
@@ -151,6 +159,38 @@ public class CalonMahasiswa {
         this.jenisKelamnin = jenisKelamnin;
     }
 
+    public Alamat getAlamat() {
+        return alamat;
+    }
+
+    public void setAlamat(Alamat alamat) {
+        this.alamat = alamat;
+    }
+
+    public BiodataOrangTua getBiodataOrangTua() {
+        return biodataOrangTua;
+    }
+
+    public void setBiodataOrangTua(BiodataOrangTua biodataOrangTua) {
+        this.biodataOrangTua = biodataOrangTua;
+    }
+
+    public ProgramStudi getProgramStudiObj() {
+        return programStudiObj;
+    }
+
+    public void setProgramStudiObj(ProgramStudi programStudiObj) {
+        this.programStudiObj = programStudiObj;
+    }
+
+    public ArrayList<RiwayatPendidikan> getRiwayatPendidikan() {
+        return riwayatPendidikan;
+    }
+
+    public void setRiwayatPendidikan(ArrayList<RiwayatPendidikan> riwayatPendidikan) {
+        this.riwayatPendidikan = riwayatPendidikan;
+    }
+    
     public Date getUpdatedAt() {
         return updatedAt;
     }

@@ -7,6 +7,7 @@
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/dialog/DialogUbahStatusPendaftaran.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/BiodataOrangTua.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/RiwayatPendidikan.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/ProgramStudiManager.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/FakultasManager.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/tables/JTableFakultas.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/StatusPerkawinan.java</file>
@@ -25,6 +26,7 @@
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/function/Fungsi.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormAbout.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/AdminManager.java</file>
+            <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/reports/CalonMahasiswaReport.jrxml</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/PesertaManager.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/CalonMahasiswa.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/ProgramStudi.java</file>

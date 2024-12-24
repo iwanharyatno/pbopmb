@@ -14,6 +14,11 @@ import java.util.Objects;
  */
 public class ProgramStudi {
 
+    private int kuota;
+    private String kode, nama, fakultas;
+    private Date createdAt, updatedAt;
+    private Fakultas fakultasObj;
+    
     public ProgramStudi(String kode, String nama, String fakultas, int kuota) {
         this.kuota = kuota;
         this.kode = kode;
@@ -28,11 +33,12 @@ public class ProgramStudi {
         this.fakultas = fakultas;
         this.fakultasObj = fakultasObj;
     }
-    private int kuota;
-    private String kode, nama, fakultas;
-    private Date createdAt, updatedAt;
-    private Fakultas fakultasObj;
 
+    public ProgramStudi(String kode, String nama) {
+        this.kode = kode;
+        this.nama = nama;
+    }
+    
     public Fakultas getFakultasObj() {
         return fakultasObj;
     }
@@ -97,13 +103,8 @@ public class ProgramStudi {
     @Override
     public int hashCode() {
         int hash = 3;
-        hash = 59 * hash + this.kuota;
-        hash = 59 * hash + Objects.hashCode(this.kode);
-        hash = 59 * hash + Objects.hashCode(this.nama);
-        hash = 59 * hash + Objects.hashCode(this.fakultas);
-        hash = 59 * hash + Objects.hashCode(this.createdAt);
-        hash = 59 * hash + Objects.hashCode(this.updatedAt);
-        hash = 59 * hash + Objects.hashCode(this.fakultasObj);
+        hash = 89 * hash + Objects.hashCode(this.kode);
+        hash = 89 * hash + Objects.hashCode(this.nama);
         return hash;
     }
 
@@ -119,26 +120,9 @@ public class ProgramStudi {
             return false;
         }
         final ProgramStudi other = (ProgramStudi) obj;
-        if (this.kuota != other.kuota) {
-            return false;
-        }
         if (!Objects.equals(this.kode, other.kode)) {
             return false;
         }
-        if (!Objects.equals(this.nama, other.nama)) {
-            return false;
-        }
-        if (!Objects.equals(this.fakultas, other.fakultas)) {
-            return false;
-        }
-        if (!Objects.equals(this.createdAt, other.createdAt)) {
-            return false;
-        }
-        if (!Objects.equals(this.updatedAt, other.updatedAt)) {
-            return false;
-        }
-        return Objects.equals(this.fakultasObj, other.fakultasObj);
+        return Objects.equals(this.nama, other.nama);
     }
-    
-    
 }

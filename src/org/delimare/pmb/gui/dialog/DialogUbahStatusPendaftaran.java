@@ -4,6 +4,7 @@
  */
 package org.delimare.pmb.gui.dialog;
 
+import javax.swing.DefaultComboBoxModel;
 import org.delimare.pmb.entity.CalonMahasiswa;
 import org.delimare.pmb.entitymanager.CalonMahasiswaManager;
 import org.delimare.pmb.function.Logger;
@@ -17,30 +18,32 @@ public class DialogUbahStatusPendaftaran extends javax.swing.JDialog {
 
     private CalonMahasiswa calon;
     private CalonMahasiswaManager manager = new CalonMahasiswaManager();
-    
+
     private EventFormClosed onFormClosed;
-    
+
     public void setOnFormClosed(EventFormClosed event) {
         onFormClosed = event;
     }
-    
+
     /**
      * Creates new form DialogUbahStatusPendaftaran
      */
     public DialogUbahStatusPendaftaran() {
         initComponents();
-        
+
         setLocationRelativeTo(null);
+
+        comboStatus.removeAllItems();
+        comboStatus.setModel(new DefaultComboBoxModel(new String[]{"Pending", "Lulus", "Tidak Lulus"}));
     }
-    
+
     public DialogUbahStatusPendaftaran(CalonMahasiswa calon) {
-        initComponents();
-        
-        setLocationRelativeTo(null);
+        this();
         this.calon = calon;
-        
+
         lblNama.setText(this.calon.getNamaLengkap());
         lblProgramStudi.setText(this.calon.getProgramStudi());
+        comboStatus.setSelectedItem(calon.getStatusPendaftaran());
     }
 
     /**
@@ -132,7 +135,7 @@ public class DialogUbahStatusPendaftaran extends javax.swing.JDialog {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         dispose();
-        
+
         try {
             manager.updateStatusPendaftaran(calon.getId(), comboStatus.getSelectedItem().toString());
             onFormClosed.onClosed();

@@ -38,7 +38,7 @@ public class JTablePeserta extends AbstractTableModel {
             case 1: return pesertaList.get(rowIndex).getNamaLengkap();
             case 2: return pesertaList.get(rowIndex).getNoTelepon();
             case 3: return pesertaList.get(rowIndex).getEmail();
-            case 4: return pesertaList.get(rowIndex).getProgramStudi();
+            case 4: return pesertaList.get(rowIndex).getProgramStudiObj().getNama() + " (" + pesertaList.get(rowIndex).getProgramStudi() + ")";
             case 5: return pesertaList.get(rowIndex).getStatusPendaftaran();
             case 6: return pesertaList.get(rowIndex).getTahunDaftar();
             case 7: return pesertaList.get(rowIndex).getCreatedAt();

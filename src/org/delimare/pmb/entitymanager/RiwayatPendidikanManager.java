@@ -133,4 +133,30 @@ public class RiwayatPendidikanManager {
 
         return hasil;
     }
+    
+    public ArrayList<RiwayatPendidikan> getDariCalon(int idCalon) {
+        ArrayList<RiwayatPendidikan> hasil = new ArrayList<>();
+
+        try {
+            String sql = "SELECT id, id_calon, sekolah, nama_sekolah, kabupaten, provinsi, tahun_lulus FROM riwayat_pendidikan "
+                       + "WHERE id_calon = " + idCalon + ";";
+            ResultSet res = Fungsi.getResult(sql);
+
+            while (res.next()) {
+                RiwayatPendidikan riwayat = new RiwayatPendidikan();
+                riwayat.setId(res.getInt("id"));
+                riwayat.setIdCalon(res.getInt("id_calon"));
+                riwayat.setSekolah(res.getString("sekolah"));
+                riwayat.setNamaSekolah(res.getString("nama_sekolah"));
+                riwayat.setKabupaten(res.getString("kabupaten"));
+                riwayat.setProvinsi(res.getString("provinsi"));
+                riwayat.setTahunLulus(res.getInt("tahun_lulus"));
+                hasil.add(riwayat);
+            }
+        } catch (Exception e) {
+            Logger.error(this, e.getMessage());
+        }
+
+        return hasil;
+    }
 }
