@@ -3,7 +3,15 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/gui/FormAbout.java</file>
+=======
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/Main.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormTambahPeserta.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormBerkas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormLogin.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
+>>>>>>> f2fd30ea2ef97b5cd00af8a2a97e74c9b8a545f5
         </group>
     </open-files>
 </project-private>
