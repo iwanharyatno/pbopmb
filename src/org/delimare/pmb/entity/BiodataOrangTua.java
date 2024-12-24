@@ -13,6 +13,8 @@ public class BiodataOrangTua {
     private String namaAyah, pendidikanAyah, pekerjaanAyah, statusAyah, pangkatAyah, jabatanAyah, instansiAyah;
     private String namaIbu, pendidikanIbu, pekerjaanIbu, statusIbu, pangkatIbu, jabatanIbu, instansiIbu;
     private String noHpAyah, noHpIbu, nipAyah, nipIbu;
+    
+    private Alamat alamatAyah, alamatIbu;
 
     public int getId() {
         return id;
@@ -189,4 +191,21 @@ public class BiodataOrangTua {
     public void setNipIbu(String nipIbu) {
         this.nipIbu = nipIbu;
     }
+
+    public Alamat getAlamatAyah() {
+        return alamatAyah;
+    }
+
+    public void setAlamatAyah(Alamat alamatAyah) {
+        this.alamatAyah = alamatAyah;
+    }
+
+    public Alamat getAlamatIbu() {
+        return alamatIbu;
+    }
+
+    public void setAlamatIbu(Alamat alamatIbu) {
+        this.alamatIbu = alamatIbu;
+    }
+    
 }
