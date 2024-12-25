@@ -3,6 +3,37 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/entitymanager/ProgramStudiManager.java</file>
+=======
+<<<<<<< HEAD
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Alamat.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormGedung.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/GedungManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormFakultas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/AlamatManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/tables/JTablePeserta.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Gedung.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/ProgramStudi.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormBerkas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Agama.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/tables/JTableGedung.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
+=======
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/entity/Fakultas.java</file>
+>>>>>>> 10e2f8d54163f965b56d0c2cc393d21e26f2663d
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/gui/FormGedung.java</file>
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/entitymanager/GedungManager.java</file>
+<<<<<<< HEAD
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/gui/FormRuangan.java</file>
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/entity/ProgramStudi.java</file>
+=======
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/entitymanager/AdminManager.java</file>
+            <file>file:/C:/SATRIA%20SEMESTER%203/PBO/pbopmbterakhir/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
+>>>>>>> b951e39706fa519c813f62aa66c4cd8a376ea9a4
+>>>>>>> 10e2f8d54163f965b56d0c2cc393d21e26f2663d
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/gui/FormRuangan.java</file>
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/entity/Fakultas.java</file>
             <file>file:/D:/Programer/javanetbeans/pbopmb/src/org/delimare/pmb/gui/FormLogin.java</file>
