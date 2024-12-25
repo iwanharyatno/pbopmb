@@ -6,8 +6,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import org.delimare.pmb.entity.Alamat;
 import org.delimare.pmb.function.Fungsi;
-import org.delimare.pmb.function.Logger;
-import static sun.jvm.hotspot.HelloWorld.e;
 
 /**
  *

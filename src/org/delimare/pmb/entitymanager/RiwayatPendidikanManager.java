@@ -49,14 +49,15 @@ public class RiwayatPendidikanManager {
         int result = 0;
 
         try {
-            String sql = "UPDATE riwayat_pendidikan SET id_calon = " + riwayat.getIdCalon() + ", sekolah = '" + riwayat.getSekolah() + "', "
+            String sql = "UPDATE riwayat_pendidikan "
+                    + "SET id_calon = " + riwayat.getIdCalon() + ", sekolah = '" + riwayat.getSekolah() + "', "
                        + "nama_sekolah = '" + riwayat.getNamaSekolah() + "', kabupaten = '" + riwayat.getKabupaten() + "', "
                        + "provinsi = '" + riwayat.getProvinsi() + "', tahun_lulus = " + riwayat.getTahunLulus() + " "
                        + "WHERE id = " + riwayat.getId() + ";";
             result = Fungsi.EQuery(sql);
         } catch (Exception e) {
             result = -1;
-            Logger.error(this, e.getMessage());
+            Logger.error(this, e.getMessage()); 
         }
 
         return result;
