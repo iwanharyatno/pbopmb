@@ -6,9 +6,22 @@
 package org.delimare.pmb.gui;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.delimare.pmb.entity.Berkas;
+import org.delimare.pmb.entitymanager.BerkasManager;
+import org.delimare.pmb.function.Alert;
+import org.delimare.pmb.function.Logger;
 import org.delimare.pmb.function.Utils;
+import org.delimare.pmb.gui.events.EventFormClosed;
+import org.delimare.pmb.gui.tables.JTableBerkas;
 
 /**
  *
@@ -16,21 +29,92 @@ import org.delimare.pmb.function.Utils;
  */
 public class FormBerkas extends javax.swing.JFrame {
 
+    private BerkasManager manager;
+    private JTableBerkas tableModel;
+    private EventFormClosed onFormClosed;
+
     /**
      * Creates new form FormBerkas
      */
     public FormBerkas() {
         initComponents();
+        manager = new BerkasManager();
+        List<Integer> idCalonList = manager.getAllIdCalon();
+        
+        if (cb_idCalon != null) {
+        cb_idCalon.removeAllItems();
+        for (Integer idCalon : idCalonList) {
+            cb_idCalon.addItem(idCalon.toString());
+        }
+        } else {
+        Logger.error(this, "ComboBox cb_idCalon tidak terinisialisasi dengan benar");
+        }
+
+        cb_idCalon.addActionListener(e -> tampilkanNamaCalon());
         
         cb_jenis.removeAllItems();
         cb_jenis.addItem("KTP");
         cb_jenis.addItem("Ijazah");
         cb_jenis.addItem("Transkrip Nilai");
-    
         
+        setLocationRelativeTo(null);
+        init();
         
     }
+    
+    
+    
+    private void tampilkanNamaCalon() {
+    Integer idCalon = Integer.parseInt(cb_idCalon.getSelectedItem().toString());
+    String namaCalon = manager.getNamaCalonById(idCalon);
+    txtNama.setText(namaCalon);
+    }
+    
+    public void setFormClosed(EventFormClosed formClosed) {
+        this.onFormClosed = formClosed;
+    }
+    
+    private void init() {
+        tableModel = new JTableBerkas();
+        manager = new BerkasManager();
+        
+        loadData();
+    }
+    
+    private void loadData() {
+        try {
+            List<Berkas> result = manager.getSemua(txtCari.getText());
+            tableModel.setList(result);
+            
+            tb_berkas.setModel(tableModel);
+        } catch (Exception e) {
+            Logger.error(this, "Gagal memuat data berkas: " + e.getMessage());
+        }
+    }
+    private boolean inputValid() {
+        if (cb_idCalon.getSelectedItem() == null || cb_idCalon.getSelectedItem().toString().trim().isEmpty()) {
+        Alert.warning("Id calon harus diisi");
+        return false;
+        }
 
+        
+        if (txtNamafile.getText().length() == 0) {
+            Alert.warning("Nama file harus diisi");
+            return false;
+        }
+        
+        if (txtPathFile.getText().length() == 0) {
+            Alert.warning("path file harus diisi");
+            return false;
+        }
+        return true;
+    }
+    
+    private void clear() {
+        txtNamafile.setText("");
+        txtPathFile.setText("");
+        
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -54,7 +138,6 @@ public class FormBerkas extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         btn_browse = new javax.swing.JButton();
         cb_jenis = new javax.swing.JComboBox<>();
-        txtIdCalon = new javax.swing.JTextField();
         txtNamafile = new javax.swing.JTextField();
         txtPathFile = new javax.swing.JTextField();
         btn_upload = new javax.swing.JButton();
@@ -65,6 +148,13 @@ public class FormBerkas extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         txtCari = new javax.swing.JTextField();
         btn_del = new javax.swing.JButton();
+        cb_idCalon = new javax.swing.JComboBox<>();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        txtNama = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        txtberkas = new javax.swing.JTextField();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -141,6 +231,10 @@ public class FormBerkas extends javax.swing.JFrame {
             }
         });
 
+        txtNamafile.setEditable(false);
+
+        txtPathFile.setEditable(false);
+
         btn_upload.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         btn_upload.setText("UPLOAD");
         btn_upload.addActionListener(new java.awt.event.ActionListener() {
@@ -167,6 +261,11 @@ public class FormBerkas extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tb_berkas.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tb_berkasMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tb_berkas);
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
@@ -175,12 +274,46 @@ public class FormBerkas extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel10.setText(":");
 
+        txtCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCariActionPerformed(evt);
+            }
+        });
+        txtCari.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCariKeyReleased(evt);
+            }
+        });
+
         btn_del.setText("DELETE");
         btn_del.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_delActionPerformed(evt);
             }
         });
+
+        cb_idCalon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cb_idCalon.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_idCalonActionPerformed(evt);
+            }
+        });
+
+        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel11.setText("NAMA CAMABA");
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel12.setText(":");
+
+        txtNama.setEditable(false);
+
+        jLabel13.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel13.setText("ID BERKAS");
+
+        jLabel14.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel14.setText(":");
+
+        txtberkas.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -189,41 +322,50 @@ public class FormBerkas extends javax.swing.JFrame {
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(299, 299, 299)
+                            .addComponent(btn_browse, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(25, 25, 25)
+                            .addComponent(btn_back)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btn_del)))
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(137, 137, 137)
+                        .addComponent(btn_upload, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addGap(36, 36, 36)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jLabel2)
                                         .addComponent(jLabel3)
                                         .addComponent(jLabel4))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel8))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(cb_jenis, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtIdCalon)
-                                        .addComponent(txtNamafile)
-                                        .addComponent(txtPathFile, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addGap(283, 283, 283)
-                                    .addComponent(btn_browse, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addComponent(btn_back)
+                                    .addComponent(jLabel11))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jLabel12))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cb_jenis, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtNamafile)
+                                    .addComponent(txtPathFile, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cb_idCalon, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtNama, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel13)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btn_del)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btn_upload, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(125, 125, 125)))
+                                .addComponent(jLabel14)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtberkas, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -238,19 +380,35 @@ public class FormBerkas extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel10)
-                    .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel6)
-                            .addComponent(txtIdCalon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel10)
+                            .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(72, 72, 72)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel14)
+                            .addComponent(txtberkas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel6)))
+                            .addComponent(cb_idCalon, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12)
+                            .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(jLabel9)
@@ -267,13 +425,12 @@ public class FormBerkas extends javax.swing.JFrame {
                             .addComponent(txtPathFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_browse)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                         .addComponent(btn_upload, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btn_back)
-                            .addComponent(btn_del)))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                            .addComponent(btn_del))))
                 .addGap(19, 19, 19))
         );
 
@@ -281,18 +438,58 @@ public class FormBerkas extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_browseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_browseActionPerformed
-        // TODO add your handling code here:
-        JFileChooser fileChooser = new JFileChooser();
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    txtPathFile.setText(selectedFile.getAbsolutePath());
-                    txtNamafile.setText(selectedFile.getName());
-                }
+       
+    JFileChooser fileChooser = new JFileChooser();
+    int result = fileChooser.showOpenDialog(null);
+    
+    if (result == JFileChooser.APPROVE_OPTION) {
+        
+        File selectedFile = fileChooser.getSelectedFile();
+        
+        
+        txtPathFile.setText(selectedFile.getAbsolutePath());
+        txtNamafile.setText(selectedFile.getName());
+    }
     }//GEN-LAST:event_btn_browseActionPerformed
 
     private void btn_uploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_uploadActionPerformed
-        // TODO add your handling code here:
+        // Tentukan folder target untuk menyimpan file
+    Path targetFolderPath = Paths.get("C:", "berkas", "PBO"); 
+
+    if (inputValid()) {
+        File selectedFile = new File(txtPathFile.getText());
+
+        if (selectedFile.exists()) {
+            try {
+                
+                Path targetFilePath = targetFolderPath.resolve(selectedFile.getName());
+                Files.copy(selectedFile.toPath(), targetFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+                
+                String fixedPath = targetFilePath.toString().replace("\\", "/");
+                txtPathFile.setText(fixedPath);
+                txtNamafile.setText(selectedFile.getName());
+
+               
+                manager.insert(new Berkas(
+                    "", 
+                    cb_idCalon.getSelectedItem().toString(), 
+                    cb_jenis.getSelectedItem().toString(),
+                    txtNamafile.getText(), 
+                    txtPathFile.getText() 
+                ));
+
+                
+                loadData();
+                clear();
+
+            } catch (IOException e) {
+                Logger.error(this, "Gagal menyalin file: " + e.getMessage());
+            }
+        } else {
+            Logger.error(this, "File yang dipilih tidak ditemukan.");
+        }
+    }
     }//GEN-LAST:event_btn_uploadActionPerformed
 
     private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
@@ -318,8 +515,67 @@ public class FormBerkas extends javax.swing.JFrame {
     }//GEN-LAST:event_cb_jenisActionPerformed
 
     private void btn_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_delActionPerformed
-        // TODO add your handling code here:
+        if (txtberkas.getText().length() == 0) {
+            Alert.warning("Pilih salah satu data untuk dihapus");
+            return;
+        }
+
+        try {
+        
+        int id = Integer.parseInt(txtberkas.getText());
+
+        
+        
+
+        // Tanyakan konfirmasi penghapusan
+        int result = Alert.confirm("Yakin ingin menghapus data berkas ini?");
+        if (result == JOptionPane.YES_OPTION) {
+            
+            manager.delete((new Berkas(
+                    txtberkas.getText(), 
+                    cb_idCalon.getSelectedItem().toString(), 
+                    cb_jenis.getSelectedItem().toString(),
+                    txtNamafile.getText(), 
+                    txtPathFile.getText() 
+                )));
+            loadData();  
+            clear();  
+        }
+    } catch (NumberFormatException e) {
+        // Tangani error jika ID tidak valid
+        Alert.warning("ID berkas harus berupa angka");
+    }
     }//GEN-LAST:event_btn_delActionPerformed
+
+    private void cb_idCalonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_idCalonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cb_idCalonActionPerformed
+
+    private void tb_berkasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_berkasMouseClicked
+        int row = tb_berkas.rowAtPoint(evt.getPoint());
+        if (row >= 0) {
+            String idBerkas = tb_berkas.getValueAt(row, 0).toString();
+            String idCalon = tb_berkas.getValueAt(row, 1).toString();
+            String jenisBerkas = tb_berkas.getValueAt(row, 2).toString();
+            String namaFile = tb_berkas.getValueAt(row, 3).toString();
+            String pathFile = tb_berkas.getValueAt(row, 4).toString();
+
+            txtberkas.setText(idBerkas);
+            cb_idCalon.setSelectedItem(idCalon); 
+            cb_jenis.setSelectedItem(jenisBerkas); 
+            txtNamafile.setText(namaFile);
+            txtPathFile.setText(pathFile);
+    }
+        
+    }//GEN-LAST:event_tb_berkasMouseClicked
+
+    private void txtCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCariActionPerformed
+
+    private void txtCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariKeyReleased
+        loadData();
+    }//GEN-LAST:event_txtCariKeyReleased
     
     
     /**
@@ -355,6 +611,8 @@ public class FormBerkas extends javax.swing.JFrame {
                 new FormBerkas().setVisible(true);
             }
         });
+        
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -362,9 +620,14 @@ public class FormBerkas extends javax.swing.JFrame {
     private javax.swing.JButton btn_browse;
     private javax.swing.JButton btn_del;
     private javax.swing.JButton btn_upload;
+    private javax.swing.JComboBox<String> cb_idCalon;
     private javax.swing.JComboBox<String> cb_jenis;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel32;
@@ -380,8 +643,13 @@ public class FormBerkas extends javax.swing.JFrame {
     private javax.swing.JTable jTable1;
     private javax.swing.JTable tb_berkas;
     private javax.swing.JTextField txtCari;
-    private javax.swing.JTextField txtIdCalon;
+    private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtNamafile;
     private javax.swing.JTextField txtPathFile;
+    private javax.swing.JTextField txtberkas;
     // End of variables declaration//GEN-END:variables
+
+    
+
+    
 }

@@ -236,6 +236,11 @@ public class FormProgramStudi extends javax.swing.JFrame {
 
         jLabel1.setText("Cari Prodi ");
 
+        txtCariProdi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCariProdiActionPerformed(evt);
+            }
+        });
         txtCariProdi.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtCariProdiKeyReleased(evt);
@@ -431,6 +436,10 @@ public class FormProgramStudi extends javax.swing.JFrame {
         });
         Utils.openFrame(this, fFakultas, false);
     }//GEN-LAST:event_jLabel6MouseClicked
+
+    private void txtCariProdiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariProdiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCariProdiActionPerformed
 
     /**
      * @param args the command line arguments
