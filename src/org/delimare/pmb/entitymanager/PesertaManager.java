@@ -20,7 +20,9 @@ public class PesertaManager {
         ArrayList<CalonMahasiswa> hasil = new ArrayList<>();
         
         try {
-            String sql = "SELECT * FROM calon_mahasiswa INNER JOIN program_studi ON program_studi.kode_prodi = calon_mahasiswa.program_studi WHERE nama_lengkap LIKE '%" + pencarian + "%' OR nik_ktp = '" + pencarian + "';";
+            String sql = "SELECT * FROM calon_mahasiswa "
+                    + "INNER JOIN program_studi ON program_studi.kode_prodi = calon_mahasiswa.program_studi "
+                    + "WHERE nama_lengkap LIKE '%" + pencarian + "%' OR nik_ktp = '" + pencarian + "';";
             ResultSet res = Fungsi.getResult(sql);
             
             while (res.next()) {

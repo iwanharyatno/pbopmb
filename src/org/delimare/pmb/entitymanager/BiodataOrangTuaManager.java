@@ -16,28 +16,17 @@ public class BiodataOrangTuaManager {
     public int insert(BiodataOrangTua bot) throws SQLException {
         int result = 0;
 
-        String sql = "INSERT INTO biodata_orangtua (id_calon, id_alamat_ayah, id_alamat_ibu, nama_ayah, pendidikan_ayah, pekerjaan_ayah, status_ayah, pangkat_ayah, jabatan_ayah, instansi_ayah, no_hp_ayah, nip_ayah, nama_ibu, pendidikan_ibu, pekerjaan_ibu, status_ibu, pangkat_ibu, jabatan_ibu, instansi_ibu, no_hp_ibu, nip_ibu) VALUES ("
-                + bot.getIdCalon() + ", "
-                + bot.getIdAlamatAyah() + ", "
-                + bot.getIdAlamatIbu() + ", '"
-                + bot.getNamaAyah() + "', '"
-                + bot.getPendidikanAyah() + "', '"
-                + bot.getPekerjaanAyah() + "', '"
-                + bot.getStatusAyah() + "', '"
-                + bot.getPangkatAyah() + "', '"
-                + bot.getJabatanAyah() + "', '"
-                + bot.getInstansiAyah() + "', '"
-                + bot.getNoHpAyah() + "', '"
-                + bot.getNipAyah() + "', '"
-                + bot.getNamaIbu() + "', '"
-                + bot.getPendidikanIbu() + "', '"
-                + bot.getPekerjaanIbu() + "', '"
-                + bot.getStatusIbu() + "', '"
-                + bot.getPangkatIbu() + "', '"
-                + bot.getJabatanIbu() + "', '"
-                + bot.getInstansiIbu() + "', '"
-                + bot.getNoHpIbu() + "', '"
-                + bot.getNipIbu() + "');";
+        String sql = "INSERT INTO biodata_orangtua (id_calon, id_alamat_ayah, id_alamat_ibu, nama_ayah, "
+                + "pendidikan_ayah, pekerjaan_ayah, status_ayah, pangkat_ayah, jabatan_ayah, instansi_ayah, "
+                + "no_hp_ayah, nip_ayah, nama_ibu, pendidikan_ibu, pekerjaan_ibu, status_ibu, pangkat_ibu, "
+                + "jabatan_ibu, instansi_ibu, no_hp_ibu, nip_ibu) VALUES ("
+                + bot.getIdCalon() + ", " + bot.getIdAlamatAyah() + ", " + bot.getIdAlamatIbu() + ", '"
+                + bot.getNamaAyah() + "', '" + bot.getPendidikanAyah() + "', '" + bot.getPekerjaanAyah() + "', '"
+                + bot.getStatusAyah() + "', '" + bot.getPangkatAyah() + "', '" + bot.getJabatanAyah() + "', '"
+                + bot.getInstansiAyah() + "', '" + bot.getNoHpAyah() + "', '" + bot.getNipAyah() + "', '"
+                + bot.getNamaIbu() + "', '" + bot.getPendidikanIbu() + "', '" + bot.getPekerjaanIbu() + "', '"
+                + bot.getStatusIbu() + "', '" + bot.getPangkatIbu() + "', '" + bot.getJabatanIbu() + "', '"
+                + bot.getInstansiIbu() + "', '" + bot.getNoHpIbu() + "', '" + bot.getNipIbu() + "');";
         result = Fungsi.EQuery(sql);
 
         return result;
@@ -154,7 +143,8 @@ public class BiodataOrangTuaManager {
     public ArrayList<BiodataOrangTua> getSemua(String pencarian) throws SQLException {
         ArrayList<BiodataOrangTua> hasil = new ArrayList<>();
 
-        String sql = "SELECT * FROM biodata_orangtua WHERE nama_ayah LIKE '%" + pencarian + "%' OR nama_ibu LIKE '%" + pencarian + "%';";
+        String sql = "SELECT * FROM biodata_orangtua "
+                + "WHERE nama_ayah LIKE '%" + pencarian + "%' OR nama_ibu LIKE '%" + pencarian + "%';";
         ResultSet res = Fungsi.getResult(sql);
 
         while (res.next()) {
