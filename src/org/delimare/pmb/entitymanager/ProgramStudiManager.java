@@ -20,7 +20,9 @@ public class ProgramStudiManager {
         int result = 0;
         
         try {
-            String sql = "INSERT INTO program_studi (kode_prodi, nama_prodi, fakultas, kuota) VALUES ('" + ps.getKode() + "', '" + ps.getNama() + "', '" + ps.getFakultas() + "', '" + ps.getKuota() + "');";
+            String sql = "INSERT INTO program_studi (kode_prodi, nama_prodi, fakultas, kuota) "
+                    + "VALUES ('" + ps.getKode() + "', '" + ps.getNama() + "', '" + ps.getFakultas() 
+                    + "', '" + ps.getKuota() + "');";
             result = Fungsi.EQuery(sql);
         } catch (Exception e) {
             result = -1;
@@ -33,7 +35,9 @@ public class ProgramStudiManager {
         int result = 0;
         
         try {
-            String sql = "UPDATE program_studi SET nama_prodi = '" + ps.getNama()+ "', fakultas = '" + ps.getFakultas() + "', kuota = '" + ps.getKuota() + "' WHERE kode_prodi = '" + ps.getKode() + "'";
+            String sql = "UPDATE program_studi SET nama_prodi = '" + ps.getNama()+ "', "
+                    + "fakultas = '" + ps.getFakultas() + "', kuota = '" + ps.getKuota() + "' "
+                    + "WHERE kode_prodi = '" + ps.getKode() + "'";
             result = Fungsi.EQuery(sql);
         } catch (Exception e) {
             result = -1;
@@ -60,7 +64,10 @@ public class ProgramStudiManager {
         ArrayList<ProgramStudi> hasil = new ArrayList<>();
         
         try {
-            String sql = "SELECT kode_prodi, nama_prodi, fakultas, nama_fakultas, kuota FROM program_studi INNER JOIN fakultas ON fakultas.kode_fakultas = program_studi.fakultas WHERE nama_prodi LIKE '%" + pencarian + "%' OR fakultas LIKE '" + pencarian + "' OR kode_prodi = '" + pencarian + "'";
+            String sql = "SELECT kode_prodi, nama_prodi, fakultas, nama_fakultas, kuota FROM program_studi "
+                    + "INNER JOIN fakultas ON fakultas.kode_fakultas = program_studi.fakultas "
+                    + "WHERE nama_prodi LIKE '%" + pencarian + "%' OR fakultas LIKE '" + pencarian 
+                    + "' OR kode_prodi = '" + pencarian + "'";
             ResultSet res = Fungsi.getResult(sql);
             
             while (res.next()) {

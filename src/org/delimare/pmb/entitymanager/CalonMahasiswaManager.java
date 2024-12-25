@@ -21,7 +21,9 @@ public class CalonMahasiswaManager {
         int result = 0;
 
         try {
-            String sql = "INSERT INTO calon_mahasiswa (nik_ktp, nama_lengkap, tempat_lahir, tanggal_lahir, nisn, no_telepon, email, program_studi, agama, status_perkawinan, status_pendaftaran, jumlah_anak, tahun_daftar, id_alamat, created_at, updated_at) VALUES ('"
+            String sql = "INSERT INTO calon_mahasiswa (nik_ktp, nama_lengkap, tempat_lahir, tanggal_lahir, nisn, "
+                    + "no_telepon, email, program_studi, agama, status_perkawinan, status_pendaftaran, jumlah_anak, "
+                    + "tahun_daftar, id_alamat, created_at, updated_at) VALUES ('"
                     + cm.getNikKtp() + "', '"
                     + cm.getNamaLengkap() + "', '"
                     + cm.getTempatLahir() + "', '"
@@ -177,7 +179,9 @@ public class CalonMahasiswaManager {
         ArrayList<CalonMahasiswa> hasil = new ArrayList<>();
 
         try {
-            String sql = "SELECT * FROM calon_mahasiswa INNER JOIN program_studi ON program_studi.kode_prodi = calon_mahasiswa.program_studi WHERE nama_lengkap LIKE '%" + pencarian + "%' OR nik_ktp = '" + pencarian + "';";
+            String sql = "SELECT * FROM calon_mahasiswa "
+                    + "INNER JOIN program_studi ON program_studi.kode_prodi = calon_mahasiswa.program_studi "
+                    + "WHERE nama_lengkap LIKE '%" + pencarian + "%' OR nik_ktp = '" + pencarian + "';";
             ResultSet res = Fungsi.getResult(sql);
 
             while (res.next()) {
@@ -250,16 +254,22 @@ public class CalonMahasiswaManager {
 
         try {
             String sql = "SELECT"
-                    + " cm.id_calon, cm.nik_ktp, cm.nama_lengkap, cm.tempat_lahir, cm.tanggal_lahir, cm.agama, cm.status_perkawinan, cm.jumlah_anak,"
-                    + " cm.nisn, cm.jenis_kelamin, cm.no_telepon, cm.email, cm.program_studi, cm.tahun_daftar, cm.status_pendaftaran, cm.created_at,"
+                    + " cm.id_calon, cm.nik_ktp, cm.nama_lengkap, cm.tempat_lahir, cm.tanggal_lahir, cm.agama, "
+                    + "cm.status_perkawinan, cm.jumlah_anak,"
+                    + " cm.nisn, cm.jenis_kelamin, cm.no_telepon, cm.email, cm.program_studi, cm.tahun_daftar, "
+                    + "cm.status_pendaftaran, cm.created_at,"
                     + " cm.updated_at,"
                     
-                    + " bt.id as 'id_biodata_orangtua', bt.nama_ayah, bt.pendidikan_ayah, bt.pekerjaan_ayah, bt.status_ayah, bt.no_hp_ayah, bt.nip_ayah,"
-                    + " bt.pangkat_ayah, bt.jabatan_ayah, bt.instansi_ayah, bt.nama_ibu, bt.pendidikan_ibu, bt.pekerjaan_ibu, bt.status_ibu, bt.no_hp_ibu,"
+                    + " bt.id as 'id_biodata_orangtua', bt.nama_ayah, bt.pendidikan_ayah, bt.pekerjaan_ayah, "
+                    + "bt.status_ayah, bt.no_hp_ayah, bt.nip_ayah,"
+                    + " bt.pangkat_ayah, bt.jabatan_ayah, bt.instansi_ayah, bt.nama_ibu, bt.pendidikan_ibu, "
+                    + "bt.pekerjaan_ibu, bt.status_ibu, bt.no_hp_ibu,"
                     + " bt.nip_ibu, bt.pangkat_ibu, bt.jabatan_ibu, bt.instansi_ibu,"
                     
-                    + " a_cm.id AS 'id_alamat_calon', a_cm.rt AS 'rt_calon', a_cm.rw AS 'rw_calon', a_cm.kecamatan AS 'kecamatan_calon',"
-                    + " a_cm.kabupaten AS 'kabupaten_calon', a_cm.provinsi AS 'provinsi_calon', a_cm.kode_pos AS 'kode_pos_calon',"
+                    + " a_cm.id AS 'id_alamat_calon', a_cm.rt AS 'rt_calon', a_cm.rw AS 'rw_calon', "
+                    + "a_cm.kecamatan AS 'kecamatan_calon',"
+                    + " a_cm.kabupaten AS 'kabupaten_calon', a_cm.provinsi AS 'provinsi_calon', "
+                    + "a_cm.kode_pos AS 'kode_pos_calon',"
                     + " a_cm.alamat AS 'alamat_calon',"
                     
                     + " a_ibu.id AS 'id_alamat_ibu', a_ibu.alamat AS 'alamat_ibu',"

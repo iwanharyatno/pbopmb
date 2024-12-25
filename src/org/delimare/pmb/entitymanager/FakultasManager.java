@@ -19,7 +19,8 @@ public class FakultasManager {
         int result = 0;
         
         try {
-            String sql = "INSERT INTO fakultas (kode_fakultas, nama_fakultas) VALUES ('" + fk.getKode() + "', '" + fk.getNama() + "');";
+            String sql = "INSERT INTO fakultas (kode_fakultas, nama_fakultas) "
+                    + "VALUES ('" + fk.getKode() + "', '" + fk.getNama() + "');";
             result = Fungsi.EQuery(sql);
         } catch (Exception e) {
             result = -1;
@@ -32,7 +33,8 @@ public class FakultasManager {
         int result = 0;
         
         try {
-            String sql = "UPDATE fakultas SET nama_fakultas = '" + fk.getNama()+ "' WHERE kode_fakultas = '" + fk.getKode() + "'";
+            String sql = "UPDATE fakultas SET nama_fakultas = '" + fk.getNama()+ "' "
+                    + "WHERE kode_fakultas = '" + fk.getKode() + "'";
             result = Fungsi.EQuery(sql);
         } catch (Exception e) {
             result = -1;
@@ -59,7 +61,8 @@ public class FakultasManager {
         ArrayList<Fakultas> hasil = new ArrayList<>();
         
         try {
-            String sql = "SELECT kode_fakultas, nama_fakultas FROM fakultas WHERE nama_fakultas LIKE '%" + pencarian + "%' OR kode_fakultas = '" + pencarian + "'";
+            String sql = "SELECT kode_fakultas, nama_fakultas FROM fakultas "
+                    + "WHERE nama_fakultas LIKE '%" + pencarian + "%' OR kode_fakultas = '" + pencarian + "'";
             ResultSet res = Fungsi.getResult(sql);
             
             while (res.next()) {

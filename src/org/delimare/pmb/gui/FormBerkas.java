@@ -111,6 +111,7 @@ public class FormBerkas extends javax.swing.JFrame {
     }
     
     private void clear() {
+        txtberkas.setText("");
         txtNamafile.setText("");
         txtPathFile.setText("");
         
@@ -225,6 +226,11 @@ public class FormBerkas extends javax.swing.JFrame {
         });
 
         cb_jenis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cb_jenis.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cb_jenisMouseClicked(evt);
+            }
+        });
         cb_jenis.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cb_jenisActionPerformed(evt);
@@ -293,6 +299,11 @@ public class FormBerkas extends javax.swing.JFrame {
         });
 
         cb_idCalon.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cb_idCalon.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                cb_idCalonMouseClicked(evt);
+            }
+        });
         cb_idCalon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cb_idCalonActionPerformed(evt);
@@ -576,6 +587,16 @@ public class FormBerkas extends javax.swing.JFrame {
     private void txtCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariKeyReleased
         loadData();
     }//GEN-LAST:event_txtCariKeyReleased
+
+    private void cb_idCalonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cb_idCalonMouseClicked
+        // TODO add your handling code here:
+        clear();
+    }//GEN-LAST:event_cb_idCalonMouseClicked
+
+    private void cb_jenisMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cb_jenisMouseClicked
+        // TODO add your handling code here:
+        clear();
+    }//GEN-LAST:event_cb_jenisMouseClicked
     
     
     /**
