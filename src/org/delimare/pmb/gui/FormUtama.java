@@ -251,7 +251,7 @@ public class FormUtama extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        Utils.openFrame(this, new FormGedung(), true);
+        Utils.openFrame(this, new FormRuangan(), true);
         dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 
