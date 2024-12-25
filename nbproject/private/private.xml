@@ -3,12 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/Main.java</file>
-            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormTambahPeserta.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Alamat.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormGedung.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/GedungManager.java</file>
             <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormFakultas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/AlamatManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/tables/JTablePeserta.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Gedung.java</file>
             <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/ProgramStudi.java</file>
             <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormBerkas.java</file>
-            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormLogin.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Agama.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/tables/JTableGedung.java</file>
             <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
         </group>
     </open-files>

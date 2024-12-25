@@ -5,7 +5,25 @@
  */
 package org.delimare.pmb.gui;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import org.delimare.pmb.connection.Koneksi;
+import org.delimare.pmb.entity.Alamat;
+import org.delimare.pmb.entity.BiodataOrangTua;
+import org.delimare.pmb.entity.CalonMahasiswa;
+import org.delimare.pmb.entity.ProgramStudi;
+import org.delimare.pmb.entity.RiwayatPendidikan;
+import org.delimare.pmb.entitymanager.AlamatManager;
+import org.delimare.pmb.entitymanager.BiodataOrangTuaManager;
+import org.delimare.pmb.entitymanager.CalonMahasiswaManager;
+import org.delimare.pmb.entitymanager.ProgramStudiManager;
+import org.delimare.pmb.entitymanager.RiwayatPendidikanManager;
+import org.delimare.pmb.function.Alert;
+import org.delimare.pmb.function.Logger;
 import org.delimare.pmb.function.Utils;
+import org.delimare.pmb.gui.events.EventFormClosed;
 
 /**
  *
@@ -13,11 +31,428 @@ import org.delimare.pmb.function.Utils;
  */
 public class FormTambahPeserta extends javax.swing.JFrame {
 
+    private Koneksi db;
+    private Connection conn;
+
+    private AlamatManager alamatManager;
+    private ProgramStudiManager programStudiManager;
+    private CalonMahasiswaManager calonMahasiswaManager;
+    private RiwayatPendidikanManager riwayatPendidikanManager;
+    private BiodataOrangTuaManager biodataOrangTuaManager;
+
+    private int calonId;
+    private CalonMahasiswa calon = null;
+
+    private EventFormClosed onFormClosed;
+
     /**
      * Creates new form FormTambahPeserta
      */
     public FormTambahPeserta() {
         initComponents();
+
+        db = new Koneksi();
+        alamatManager = new AlamatManager();
+        conn = db.getConnection();
+        programStudiManager = new ProgramStudiManager();
+        calonMahasiswaManager = new CalonMahasiswaManager();
+        riwayatPendidikanManager = new RiwayatPendidikanManager();
+        biodataOrangTuaManager = new BiodataOrangTuaManager();
+
+        loadComboProgramStudi();
+    }
+
+    public FormTambahPeserta(int calonId) {
+        this();
+        this.calonId = calonId;
+
+        populateFields();
+        lblJudul.setText("Ubah Data Peserta");
+    }
+
+    public void setFormClosedListener(EventFormClosed event) {
+        onFormClosed = event;
+    }
+
+    private void populateFields() {
+        CalonMahasiswa mhs = calonMahasiswaManager.getSingleWithRelations(calonId);
+        if (mhs == null) {
+            dispose();
+            return;
+        }
+        this.calon = mhs;
+
+        // Populate CalonMahasiswa fields
+        txtIDPeserta.setText(mhs.getId() + "");
+        txtNIKPeserta.setText(mhs.getNikKtp());
+        txtNamaPeserta.setText(mhs.getNamaLengkap());
+        txtTempatLahir.setText(mhs.getTempatLahir());
+        calendarTglLahir.setDate(mhs.getTanggalLahir());
+        comboAgama.setSelectedItem(mhs.getAgama());
+        comboStatusPerkawinan.setSelectedItem(mhs.getStatusPerkawinan());
+        txtJumlahAnak.setText(mhs.getJumlahAnak() + "");
+        txtNISN.setText(mhs.getNisn());
+        comboJenisKelamin.setSelectedItem(mhs.getJenisKelamnin());
+        txtNoTelepon.setText(mhs.getNoTelepon());
+        txtEmail.setText(mhs.getEmail());
+        numTahunDaftar.setValue(mhs.getTahunDaftar());
+        comboStatusPendaftaran.setSelectedItem(mhs.getStatusPendaftaran());
+        txtIdCalon.setText(mhs.getId() + "");
+        comboProgramStudi.setSelectedItem(calon.getProgramStudiObj());
+
+        // Populate Alamat CalonMahasiswa fields
+        Alamat alamatCalon = mhs.getAlamat();
+        if (alamatCalon != null) {
+            txtIdAlamat.setText(alamatCalon.getId() + "");
+            txtRt.setText(alamatCalon.getRt() + "");
+            txtRw.setText(alamatCalon.getRw() + "");
+            txtKecamatan.setText(alamatCalon.getKecamatan());
+            txtKabupaten.setText(alamatCalon.getKabupaten());
+            txtProvinsi.setText(alamatCalon.getProvinsi());
+            txtKodePos.setText(alamatCalon.getKodePos() + "");
+            txtAlamat.setText(alamatCalon.getAlamat());
+        }
+
+        // Populate BiodataOrangTua fields
+        BiodataOrangTua biodataOrtu = mhs.getBiodataOrangTua();
+        if (biodataOrtu != null) {
+            txtNamaAyah.setText(biodataOrtu.getNamaAyah());
+            txtPendidikanAyah.setText(biodataOrtu.getPendidikanAyah());
+            txtPekerjaanAyah.setText(biodataOrtu.getPekerjaanAyah());
+            comboStatusAyah.setSelectedItem(biodataOrtu.getStatusAyah());
+            txtNoHpAyah.setText(biodataOrtu.getNoHpAyah());
+            txtNIPAyah.setText(biodataOrtu.getNipAyah());
+            txtPangkatAyah.setText(biodataOrtu.getPangkatAyah());
+            txtJabatanAyah.setText(biodataOrtu.getJabatanAyah());
+            txtInstansiAyah.setText(biodataOrtu.getInstansiAyah());
+
+            txtNamaIbu.setText(biodataOrtu.getNamaIbu());
+            txtPendidikanIbu.setText(biodataOrtu.getPendidikanIbu());
+            txtPekerjaanIbu.setText(biodataOrtu.getPekerjaanIbu());
+            comboStatusIbu.setSelectedItem(biodataOrtu.getStatusIbu());
+            txtNoHpIbu.setText(biodataOrtu.getNoHpIbu());
+            txtNIPIbu.setText(biodataOrtu.getNipIbu());
+            txtPangkatIbu.setText(biodataOrtu.getPangkatIbu());
+            txtJabatanIbu.setText(biodataOrtu.getJabatanIbu());
+            txtInstansiIbu.setText(biodataOrtu.getInstansiIbu());
+
+            // Populate Alamat Ayah fields
+            Alamat alamatAyah = biodataOrtu.getAlamatAyah();
+            if (alamatAyah != null) {
+                txtAlamatAyah.setText(alamatAyah.getAlamat());
+            }
+
+            // Populate Alamat Ibu fields
+            Alamat alamatIbu = biodataOrtu.getAlamatIbu();
+            if (alamatIbu != null) {
+                txtAlamatIbu.setText(alamatIbu.getAlamat());
+            }
+        }
+
+        ArrayList<RiwayatPendidikan> riwayatPendidikan = riwayatPendidikanManager.getDariCalon(calonId);
+        this.calon.setRiwayatPendidikan(riwayatPendidikan);
+
+        for (RiwayatPendidikan rp : riwayatPendidikan) {
+            if ("SD".equals(rp.getSekolah())) {
+                txtNamaSekolahSd.setText(rp.getNamaSekolah());
+                txtNamaKabupatenSD.setText(rp.getKabupaten());
+                txtNamaProvinsiSD.setText(rp.getProvinsi());
+                numTahunLulusSD.setValue(rp.getTahunLulus());
+            }
+            if ("SMP".equals(rp.getSekolah())) {
+                txtNamaSekolahSMP.setText(rp.getNamaSekolah());
+                txtNamaKabupatenSMP.setText(rp.getKabupaten());
+                txtNamaProvinsiSMP.setText(rp.getProvinsi());
+                numTahunLulusSMP.setValue(rp.getTahunLulus());
+            }
+            if ("SMA".equals(rp.getSekolah())) {
+                txtNamaSekolahSMA.setText(rp.getNamaSekolah());
+                txtNamaKabupatenSMA.setText(rp.getKabupaten());
+                txtNamaProvinsiSMA.setText(rp.getProvinsi());
+                numTahunLulusSMA.setValue(rp.getTahunLulus());
+            }
+        }
+    }
+
+    private boolean inputValid() {
+        if (txtRt.getText().length() == 0) {
+            Alert.warning("Kolom RT wajib diisi");
+            return false;
+        }
+
+        if (txtRt.getText().length() == 0) {
+            Alert.warning("Kolom RW wajib diisi");
+            return false;
+        }
+
+        if (txtKecamatan.getText().length() == 0) {
+            Alert.warning("Kolom Kecamatan wajib diisi");
+            return false;
+        }
+
+        if (txtKabupaten.getText().length() == 0) {
+            Alert.warning("Kolom Kabupaten wajib diisi");
+            return false;
+        }
+
+        if (txtProvinsi.getText().length() == 0) {
+            Alert.warning("Kolom Provinsi wajib diisi");
+            return false;
+        }
+
+        if (txtKodePos.getText().length() == 0) {
+            Alert.warning("Kolom Kode Pos wajib diisi");
+            return false;
+        }
+
+        if (txtAlamat.getText().length() == 0) {
+            Alert.warning("Kolom Alamat wajib diisi");
+            return false;
+        }
+
+        if (txtNIKPeserta.getText().length() == 0) {
+            Alert.warning("Kolom NIK Peserta wajib diisi");
+            return false;
+        }
+
+        if (txtNamaPeserta.getText().length() == 0) {
+            Alert.warning("Kolom Nama Peserta wajib diisi");
+            return false;
+        }
+
+        if (txtTempatLahir.getText().length() == 0) {
+            Alert.warning("Kolom Tempat Lahir wajib diisi");
+            return false;
+        }
+
+        if (calendarTglLahir.getDate() == null) {
+            Alert.warning("Kolom Tanggal Lahir wajib diisi");
+            return false;
+        }
+
+        if (comboAgama.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Agama wajib diisi");
+            return false;
+        }
+
+        if (comboStatusPerkawinan.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Status Perkawinan wajib diisi");
+            return false;
+        }
+
+        if (txtJumlahAnak.getText().length() == 0) {
+            Alert.warning("Kolom Jumlah Anak wajib diisi");
+            return false;
+        }
+
+        if (txtNISN.getText().length() == 0) {
+            Alert.warning("Kolom NISN wajib diisi");
+            return false;
+        }
+
+        if (comboJenisKelamin.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Jenis Kelamin wajib diisi");
+            return false;
+        }
+
+        if (txtNoTelepon.getText().length() == 0) {
+            Alert.warning("Kolom No Telepon wajib diisi");
+            return false;
+        }
+
+        if (txtEmail.getText().length() == 0) {
+            Alert.warning("Kolom Email wajib diisi");
+            return false;
+        }
+
+        if (comboProgramStudi.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Program Studi wajib diisi");
+            return false;
+        }
+
+        if (numTahunDaftar.getYear() == 0) {
+            Alert.warning("Kolom Tahun Daftar wajib diisi");
+            return false;
+        }
+
+        if (comboStatusPendaftaran.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Status Pendaftaran wajib diisi");
+            return false;
+        }
+
+        if (txtNamaSekolahSd.getText().length() == 0) {
+            Alert.warning("Kolom Nama Sekolah SD wajib diisi");
+            return false;
+        }
+
+        if (txtNamaSekolahSMP.getText().length() == 0) {
+            Alert.warning("Kolom Nama Sekolah SMP wajib diisi");
+            return false;
+        }
+
+        if (txtNamaSekolahSMA.getText().length() == 0) {
+            Alert.warning("Kolom Nama Sekolah SMA wajib diisi");
+            return false;
+        }
+
+        if (txtNamaKabupatenSD.getText().length() == 0) {
+            Alert.warning("Kolom Nama Kabupaten SD wajib diisi");
+            return false;
+        }
+
+        if (txtNamaKabupatenSMP.getText().length() == 0) {
+            Alert.warning("Kolom Nama Kabupaten SMP wajib diisi");
+            return false;
+        }
+
+        if (txtNamaKabupatenSMA.getText().length() == 0) {
+            Alert.warning("Kolom Nama Kabupaten SMA wajib diisi");
+            return false;
+        }
+
+        if (txtNamaProvinsiSD.getText().length() == 0) {
+            Alert.warning("Kolom Nama Provinsi SD wajib diisi");
+            return false;
+        }
+
+        if (txtNamaProvinsiSMP.getText().length() == 0) {
+            Alert.warning("Kolom Nama Provinsi SMP wajib diisi");
+            return false;
+        }
+
+        if (txtNamaProvinsiSMA.getText().length() == 0) {
+            Alert.warning("Kolom Nama Provinsi SMA wajib diisi");
+            return false;
+        }
+
+        if (numTahunLulusSD.getYear() == 0) {
+            Alert.warning("Kolom Tahun Lulus SD wajib diisi");
+            return false;
+        }
+
+        if (numTahunLulusSMP.getYear() == 0) {
+            Alert.warning("Kolom Tahun Lulus SMP wajib diisi");
+            return false;
+        }
+
+        if (numTahunLulusSMA.getYear() == 0) {
+            Alert.warning("Kolom Tahun Lulus SMA wajib diisi");
+            return false;
+        }
+
+        if (txtNamaAyah.getText().length() == 0) {
+            Alert.warning("Kolom Nama Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtAlamatAyah.getText().length() == 0) {
+            Alert.warning("Kolom Alamat Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtPendidikanAyah.getText().length() == 0) {
+            Alert.warning("Kolom Pendidikan Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtPekerjaanAyah.getText().length() == 0) {
+            Alert.warning("Kolom Pekerjaan Ayah wajib diisi");
+            return false;
+        }
+
+        if (comboStatusAyah.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Status Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtNoHpAyah.getText().length() == 0) {
+            Alert.warning("Kolom No HP Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtNIPAyah.getText().length() == 0) {
+            Alert.warning("Kolom NIP Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtPangkatAyah.getText().length() == 0) {
+            Alert.warning("Kolom Pangkat Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtJabatanAyah.getText().length() == 0) {
+            Alert.warning("Kolom Jabatan Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtInstansiAyah.getText().length() == 0) {
+            Alert.warning("Kolom Instansi Ayah wajib diisi");
+            return false;
+        }
+
+        if (txtNamaIbu.getText().length() == 0) {
+            Alert.warning("Kolom Nama Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtAlamatIbu.getText().length() == 0) {
+            Alert.warning("Kolom Alamat Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtPendidikanIbu.getText().length() == 0) {
+            Alert.warning("Kolom Pendidikan Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtPekerjaanIbu.getText().length() == 0) {
+            Alert.warning("Kolom Pekerjaan Ibu wajib diisi");
+            return false;
+        }
+
+        if (comboStatusIbu.getSelectedIndex() == -1) {
+            Alert.warning("Kolom Status Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtNoHpIbu.getText().length() == 0) {
+            Alert.warning("Kolom No HP Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtNIPIbu.getText().length() == 0) {
+            Alert.warning("Kolom NIP Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtPangkatIbu.getText().length() == 0) {
+            Alert.warning("Kolom Pangkat Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtJabatanIbu.getText().length() == 0) {
+            Alert.warning("Kolom Jabatan Ibu wajib diisi");
+            return false;
+        }
+
+        if (txtInstansiIbu.getText().length() == 0) {
+            Alert.warning("Kolom Instansi Ibu wajib diisi");
+            return false;
+        }
+
+        return true;
+    }
+
+    private void loadComboProgramStudi() {
+        ArrayList<ProgramStudi> programStudi = programStudiManager.getSemua("");
+        comboProgramStudi.setModel(new DefaultComboBoxModel(programStudi.toArray()));
+    }
+
+    private void toNextField(java.awt.event.KeyEvent evt, javax.swing.JComponent next) {
+        int code = (int) evt.getKeyChar();
+        if ((code == 9 || code == 10) && evt.isControlDown()) {
+            next.requestFocus();
+        }
     }
 
     /**
@@ -59,8 +494,6 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         comboAgama = new javax.swing.JComboBox();
         jScrollPane7 = new javax.swing.JScrollPane();
         txtTempatLahir = new javax.swing.JTextPane();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        txtJenisKelamin = new javax.swing.JTextPane();
         jScrollPane9 = new javax.swing.JScrollPane();
         txtJumlahAnak = new javax.swing.JTextPane();
         jScrollPane10 = new javax.swing.JScrollPane();
@@ -68,8 +501,9 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         jScrollPane12 = new javax.swing.JScrollPane();
         txtNoTelepon = new javax.swing.JTextPane();
         comboStatusPendaftaran = new javax.swing.JComboBox();
-        txtComboProgramStudi = new javax.swing.JComboBox();
+        comboProgramStudi = new javax.swing.JComboBox();
         numTahunDaftar = new com.toedter.calendar.JYearChooser();
+        comboJenisKelamin = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -181,26 +615,38 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         txtAlamat = new javax.swing.JTextPane();
         jLabel56 = new javax.swing.JLabel();
         jLabel57 = new javax.swing.JLabel();
-        jLabel32 = new javax.swing.JLabel();
+        lblJudul = new javax.swing.JLabel();
         jLabel34 = new javax.swing.JLabel();
         btnKeluar = new javax.swing.JButton();
         btnSimpan = new javax.swing.JButton();
         btnKelolaBerkas = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel1.setText("Biodata Peserta");
 
+        txtIDPeserta.setEditable(false);
         jScrollPane1.setViewportView(txtIDPeserta);
 
         jLabel2.setText("ID PESERTA");
 
         jLabel3.setText("NIK");
 
+        txtNIKPeserta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNIKPesertaKeyTyped(evt);
+            }
+        });
         jScrollPane2.setViewportView(txtNIKPeserta);
 
+        txtNamaPeserta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaPesertaKeyTyped(evt);
+            }
+        });
         jScrollPane3.setViewportView(txtNamaPeserta);
 
         jLabel4.setText("NAMA");
@@ -209,6 +655,11 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jLabel6.setText("TANGGAL LAHIR");
 
+        txtNISN.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNISNKeyTyped(evt);
+            }
+        });
         jScrollPane5.setViewportView(txtNISN);
 
         jLabel7.setText("AGAMA");
@@ -232,22 +683,73 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         jLabel16.setText("PROGRAM STUDI");
 
         comboStatusPerkawinan.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "BELUM MENIKAH", "MENIKAH", "JANDA", "DUDA" }));
+        comboStatusPerkawinan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                comboStatusPerkawinanKeyTyped(evt);
+            }
+        });
 
         comboAgama.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Islam", "Kristen", "Katolik", "Kristen Protestan", "Hindu", "Buddha" }));
+        comboAgama.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                comboAgamaKeyTyped(evt);
+            }
+        });
 
+        txtTempatLahir.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTempatLahirKeyTyped(evt);
+            }
+        });
         jScrollPane7.setViewportView(txtTempatLahir);
 
-        jScrollPane8.setViewportView(txtJenisKelamin);
-
+        txtJumlahAnak.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtJumlahAnakKeyTyped(evt);
+            }
+        });
         jScrollPane9.setViewportView(txtJumlahAnak);
 
+        txtEmail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtEmailKeyTyped(evt);
+            }
+        });
         jScrollPane10.setViewportView(txtEmail);
 
+        txtNoTelepon.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNoTeleponKeyTyped(evt);
+            }
+        });
         jScrollPane12.setViewportView(txtNoTelepon);
 
         comboStatusPendaftaran.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pending", "Lulus", "Tidak Lulus" }));
+        comboStatusPendaftaran.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                comboStatusPendaftaranKeyTyped(evt);
+            }
+        });
 
-        txtComboProgramStudi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboProgramStudi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboProgramStudi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                comboProgramStudiKeyTyped(evt);
+            }
+        });
+
+        numTahunDaftar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                numTahunDaftarKeyTyped(evt);
+            }
+        });
+
+        comboJenisKelamin.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-laki", "Perempuan" }));
+        comboJenisKelamin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                comboJenisKelaminKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -258,60 +760,48 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addGap(74, 74, 74)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane2)
-                                    .addComponent(jScrollPane3)
-                                    .addComponent(jScrollPane7)))
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel13)
+                            .addComponent(jLabel8))
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(comboJenisKelamin, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jScrollPane12, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel10)
-                                        .addComponent(jLabel11)
-                                        .addComponent(jLabel9)
-                                        .addComponent(jLabel12)
-                                        .addComponent(jLabel13)
-                                        .addComponent(jLabel8))
-                                    .addGap(30, 30, 30)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(comboStatusPerkawinan, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jScrollPane9, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(numTahunDaftar, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtComboProgramStudi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(comboStatusPendaftaran, 0, 180, Short.MAX_VALUE))))
-                        .addContainerGap(14, Short.MAX_VALUE))
+                                    .addComponent(comboProgramStudi, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(comboStatusPendaftaran, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(comboAgama, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(comboStatusPerkawinan, javax.swing.GroupLayout.Alignment.LEADING, 0, 178, Short.MAX_VALUE))))
+                    .addComponent(calendarTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel7))
-                        .addGap(62, 62, 62)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(calendarTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addGap(7, 7, 7))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(comboAgama, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel15))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel5))
+                        .addGap(74, 74, 74)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2)
+                            .addComponent(jScrollPane3)
+                            .addComponent(jScrollPane7)))
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel15))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,21 +824,19 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(24, 24, 24)
-                        .addComponent(jLabel6)
-                        .addGap(89, 89, 89))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(calendarTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(comboAgama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                        .addComponent(jLabel6))
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(calendarTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(comboAgama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(comboStatusPerkawinan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -366,18 +854,18 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                         .addComponent(jLabel11)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel12))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(comboJenisKelamin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel13)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel16)
-                            .addComponent(txtComboProgramStudi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboProgramStudi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16)))
                     .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -388,27 +876,44 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                             .addComponent(jLabel15)
                             .addComponent(comboStatusPendaftaran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(numTahunDaftar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(19, 19, 19))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel18.setText("BIODATA AYAH");
 
+        txtIdCalon.setEditable(false);
         jScrollPane4.setViewportView(txtIdCalon);
 
         jLabel19.setText("ID CALON");
 
         jLabel20.setText("NAMA AYAH ");
 
+        txtNamaAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaAyahKeyTyped(evt);
+            }
+        });
         jScrollPane6.setViewportView(txtNamaAyah);
 
+        txtAlamatAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtAlamatAyahKeyTyped(evt);
+            }
+        });
         jScrollPane13.setViewportView(txtAlamatAyah);
 
         jLabel21.setText("ALAMAT AYAH");
 
         jLabel22.setText("PENDIDIKAN AYAH");
 
+        txtPangkatAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPangkatAyahKeyTyped(evt);
+            }
+        });
         jScrollPane14.setViewportView(txtPangkatAyah);
 
         jLabel24.setText("PEKERJAAN AYAH");
@@ -426,37 +931,98 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         jLabel30.setText("INSTANSI AYAH");
 
         comboStatusAyah.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboStatusAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                comboStatusAyahKeyTyped(evt);
+            }
+        });
 
+        txtPendidikanAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPendidikanAyahKeyTyped(evt);
+            }
+        });
         jScrollPane15.setViewportView(txtPendidikanAyah);
 
+        txtJabatanAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtJabatanAyahKeyTyped(evt);
+            }
+        });
         jScrollPane16.setViewportView(txtJabatanAyah);
 
+        txtNIPAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNIPAyahKeyTyped(evt);
+            }
+        });
         jScrollPane17.setViewportView(txtNIPAyah);
 
+        txtInstansiAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtInstansiAyahKeyTyped(evt);
+            }
+        });
         jScrollPane20.setViewportView(txtInstansiAyah);
 
+        txtPekerjaanAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPekerjaanAyahKeyTyped(evt);
+            }
+        });
         jScrollPane21.setViewportView(txtPekerjaanAyah);
 
+        txtNoHpAyah.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNoHpAyahKeyTyped(evt);
+            }
+        });
         jScrollPane22.setViewportView(txtNoHpAyah);
 
+        jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel23.setText("BIODATA IBU");
 
+        txtNoHpIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNoHpIbuKeyTyped(evt);
+            }
+        });
         jScrollPane24.setViewportView(txtNoHpIbu);
 
+        txtNamaIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaIbuKeyTyped(evt);
+            }
+        });
         jScrollPane18.setViewportView(txtNamaIbu);
 
         jLabel31.setText("NAMA IBU");
 
         jLabel33.setText("ALAMAT IBU");
 
+        txtAlamatIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtAlamatIbuKeyTyped(evt);
+            }
+        });
         jScrollPane25.setViewportView(txtAlamatIbu);
 
+        txtPendidikanIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPendidikanIbuKeyTyped(evt);
+            }
+        });
         jScrollPane26.setViewportView(txtPendidikanIbu);
 
         jLabel35.setText("PENDIDIKAN IBU");
 
         jLabel36.setText("PEKERJAAN IBU");
 
+        txtJabatanIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtJabatanIbuKeyTyped(evt);
+            }
+        });
         jScrollPane27.setViewportView(txtJabatanIbu);
 
         jLabel37.setText("STATUS IBU");
@@ -471,14 +1037,39 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jLabel42.setText("INSTANSI IBU");
 
+        txtNIPIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNIPIbuKeyTyped(evt);
+            }
+        });
         jScrollPane28.setViewportView(txtNIPIbu);
 
         comboStatusIbu.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboStatusIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                comboStatusIbuKeyTyped(evt);
+            }
+        });
 
+        txtPekerjaanIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPekerjaanIbuKeyTyped(evt);
+            }
+        });
         jScrollPane29.setViewportView(txtPekerjaanIbu);
 
+        txtInstansiIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtInstansiIbuKeyTyped(evt);
+            }
+        });
         jScrollPane30.setViewportView(txtInstansiIbu);
 
+        txtPangkatIbu.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPangkatIbuKeyTyped(evt);
+            }
+        });
         jScrollPane31.setViewportView(txtPangkatIbu);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -680,12 +1271,23 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 txtNamaSekolahSdActionPerformed(evt);
             }
         });
+        txtNamaSekolahSd.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaSekolahSdKeyTyped(evt);
+            }
+        });
 
         jTextField3.setEditable(false);
         jTextField3.setText("SD");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField3ActionPerformed(evt);
+            }
+        });
+
+        numTahunLulusSD.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                numTahunLulusSDKeyTyped(evt);
             }
         });
 
@@ -700,6 +1302,17 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         txtNamaSekolahSMP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNamaSekolahSMPActionPerformed(evt);
+            }
+        });
+        txtNamaSekolahSMP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaSekolahSMPKeyTyped(evt);
+            }
+        });
+
+        numTahunLulusSMP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                numTahunLulusSMPKeyTyped(evt);
             }
         });
 
@@ -717,10 +1330,56 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 txtNamaSekolahSMAActionPerformed(evt);
             }
         });
+        txtNamaSekolahSMA.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaSekolahSMAKeyTyped(evt);
+            }
+        });
+
+        numTahunLulusSMA.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                numTahunLulusSMAKeyTyped(evt);
+            }
+        });
+
+        txtNamaKabupatenSD.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaKabupatenSDKeyTyped(evt);
+            }
+        });
+
+        txtNamaProvinsiSD.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaProvinsiSDKeyTyped(evt);
+            }
+        });
 
         txtNamaKabupatenSMP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNamaKabupatenSMPActionPerformed(evt);
+            }
+        });
+        txtNamaKabupatenSMP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaKabupatenSMPKeyTyped(evt);
+            }
+        });
+
+        txtNamaKabupatenSMA.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaKabupatenSMAKeyTyped(evt);
+            }
+        });
+
+        txtNamaProvinsiSMP.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaProvinsiSMPKeyTyped(evt);
+            }
+        });
+
+        txtNamaProvinsiSMA.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNamaProvinsiSMAKeyTyped(evt);
             }
         });
 
@@ -813,38 +1472,75 @@ public class FormTambahPeserta extends javax.swing.JFrame {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        txtIdAlamat.setEditable(false);
         jScrollPane19.setViewportView(txtIdAlamat);
 
         jLabel48.setText("ID ");
 
+        txtRt.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtRtKeyTyped(evt);
+            }
+        });
         jScrollPane23.setViewportView(txtRt);
 
         jLabel49.setText("RT");
 
+        txtRw.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtRwKeyReleased(evt);
+            }
+        });
         jScrollPane32.setViewportView(txtRw);
 
         jLabel50.setText("RW");
 
+        txtKecamatan.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtKecamatanKeyTyped(evt);
+            }
+        });
         jScrollPane33.setViewportView(txtKecamatan);
 
         jLabel51.setText("KECAMATAN");
 
         jLabel52.setText("KABUPATEN");
 
+        txtKabupaten.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtKabupatenKeyTyped(evt);
+            }
+        });
         jScrollPane34.setViewportView(txtKabupaten);
 
         jLabel54.setText("PROVINSI");
 
+        txtProvinsi.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtProvinsiKeyTyped(evt);
+            }
+        });
         jScrollPane36.setViewportView(txtProvinsi);
 
+        txtKodePos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtKodePosKeyTyped(evt);
+            }
+        });
         jScrollPane37.setViewportView(txtKodePos);
 
         jLabel55.setText("KODE POS");
 
+        txtAlamat.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtAlamatKeyTyped(evt);
+            }
+        });
         jScrollPane38.setViewportView(txtAlamat);
 
         jLabel56.setText("ALAMAT");
 
+        jLabel57.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jLabel57.setText("ISI ALAMAT");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -852,44 +1548,44 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel56)
-                    .addComponent(jLabel55)
-                    .addComponent(jLabel54)
-                    .addComponent(jLabel52)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel49)
-                                .addComponent(jLabel50))
-                            .addGap(109, 109, 109)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jScrollPane23)
-                                .addComponent(jScrollPane32)
-                                .addComponent(jScrollPane33, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane34, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane36, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane37, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jScrollPane38, javax.swing.GroupLayout.Alignment.TRAILING)))
-                        .addGroup(jPanel4Layout.createSequentialGroup()
-                            .addComponent(jLabel48)
-                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel56)
+                            .addComponent(jLabel55)
+                            .addComponent(jLabel54)
+                            .addComponent(jLabel52)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(jPanel4Layout.createSequentialGroup()
-                                    .addGap(142, 142, 142)
-                                    .addComponent(jLabel57))
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel49)
+                                        .addComponent(jLabel50))
+                                    .addGap(109, 109, 109)
+                                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jScrollPane23)
+                                        .addComponent(jScrollPane32)
+                                        .addComponent(jScrollPane33, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane34, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane36, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane37, javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jScrollPane38, javax.swing.GroupLayout.Alignment.TRAILING)))
                                 .addGroup(jPanel4Layout.createSequentialGroup()
+                                    .addComponent(jLabel48)
                                     .addGap(114, 114, 114)
-                                    .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addComponent(jLabel51))
+                                    .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel51)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(143, 143, 143)
+                        .addComponent(jLabel57)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addComponent(jLabel57)
-                .addGap(22, 22, 22)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel48)
                     .addComponent(jScrollPane19, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -924,8 +1620,8 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                 .addContainerGap(14, Short.MAX_VALUE))
         );
 
-        jLabel32.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
-        jLabel32.setText("Tambah Data Peserta");
+        lblJudul.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
+        lblJudul.setText("Tambah Data Peserta");
 
         jLabel34.setText("Lengkapi data diri peserta dan informasi tambahan lainnya");
 
@@ -937,6 +1633,11 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         });
 
         btnSimpan.setText("Simpan");
+        btnSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSimpanActionPerformed(evt);
+            }
+        });
 
         btnKelolaBerkas.setText("Kelola berkas pendaftaran...");
         btnKelolaBerkas.addActionListener(new java.awt.event.ActionListener() {
@@ -957,45 +1658,46 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 686, Short.MAX_VALUE))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 699, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSimpan, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnKelolaBerkas, javax.swing.GroupLayout.Alignment.TRAILING)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel32)
+                        .addComponent(lblJudul)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel34)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
                         .addComponent(btnKeluar)))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(34, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel32)
-                    .addComponent(jLabel34)
-                    .addComponent(btnKeluar))
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSimpan)
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblJudul)
+                            .addComponent(jLabel34)
+                            .addComponent(btnKeluar))
                         .addGap(18, 18, 18)
-                        .addComponent(btnKelolaBerkas))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(15, 15, 15))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSimpan)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnKelolaBerkas))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -1033,11 +1735,466 @@ public class FormTambahPeserta extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNamaKabupatenSMPActionPerformed
 
+    private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
+        if (!inputValid()) {
+            return;
+        }
+
+        try {
+            try {
+                conn.setAutoCommit(false);
+
+                if (calon == null) {
+                    Alamat alamat = new Alamat();
+                    alamat.setRt(Integer.parseInt(txtRt.getText()));
+                    alamat.setRw(Integer.parseInt(txtRw.getText()));
+                    alamat.setKecamatan(txtKecamatan.getText());
+                    alamat.setKabupaten(txtKabupaten.getText());
+                    alamat.setProvinsi(txtProvinsi.getText());
+                    alamat.setKodePos(Integer.parseInt(txtKodePos.getText()));
+                    alamat.setAlamat(txtAlamat.getText());
+                    int idAlamat = alamatManager.insert(alamat, conn);
+
+                    txtIdAlamat.setText(String.valueOf(idAlamat));
+
+                    CalonMahasiswa calonMahasiswa = new CalonMahasiswa();
+                    calonMahasiswa.setNikKtp(txtNIKPeserta.getText());
+                    calonMahasiswa.setNamaLengkap(txtNamaPeserta.getText());
+                    calonMahasiswa.setTempatLahir(txtTempatLahir.getText());
+                    calonMahasiswa.setTanggalLahir(calendarTglLahir.getDate());
+                    calonMahasiswa.setAgama(comboAgama.getSelectedItem().toString());
+                    calonMahasiswa.setStatusPerkawinan(comboStatusPerkawinan.getSelectedItem().toString());
+                    calonMahasiswa.setJumlahAnak(Integer.parseInt(txtJumlahAnak.getText()));
+                    calonMahasiswa.setNisn(txtNISN.getText());
+                    calonMahasiswa.setJenisKelamnin(comboJenisKelamin.getSelectedItem().toString());
+                    calonMahasiswa.setNoTelepon(txtNoTelepon.getText());
+                    calonMahasiswa.setEmail(txtEmail.getText());
+                    ProgramStudi selected = (ProgramStudi) comboProgramStudi.getSelectedItem();
+                    calonMahasiswa.setProgramStudi(selected.getKode());
+                    calonMahasiswa.setTahunDaftar(numTahunDaftar.getYear());
+                    calonMahasiswa.setStatusPendaftaran(comboStatusPendaftaran.getSelectedItem().toString());
+                    calonMahasiswa.setIdAlamat(idAlamat);
+                    int idCalon = calonMahasiswaManager.insert(calonMahasiswa, conn);
+
+                    txtIdCalon.setText(String.valueOf(idCalon));
+                    txtIDPeserta.setText(String.valueOf(idCalon));
+
+                    RiwayatPendidikan riwayatSd = new RiwayatPendidikan();
+                    riwayatSd.setSekolah("SD");
+                    riwayatSd.setNamaSekolah(txtNamaSekolahSd.getText());
+                    riwayatSd.setKabupaten(txtNamaKabupatenSD.getText());
+                    riwayatSd.setProvinsi(txtNamaProvinsiSD.getText());
+                    riwayatSd.setTahunLulus(numTahunLulusSD.getYear());
+                    riwayatSd.setIdCalon(idCalon);
+                    riwayatPendidikanManager.insert(riwayatSd, conn);
+
+                    RiwayatPendidikan riwayatSmp = new RiwayatPendidikan();
+                    riwayatSmp.setSekolah("SMP");
+                    riwayatSmp.setNamaSekolah(txtNamaSekolahSMP.getText());
+                    riwayatSmp.setKabupaten(txtNamaKabupatenSMP.getText());
+                    riwayatSmp.setProvinsi(txtNamaProvinsiSMP.getText());
+                    riwayatSmp.setTahunLulus(numTahunLulusSMP.getYear());
+                    riwayatSmp.setIdCalon(idCalon);
+                    riwayatPendidikanManager.insert(riwayatSmp, conn);
+
+                    RiwayatPendidikan riwayatSma = new RiwayatPendidikan();
+                    riwayatSma.setSekolah("SMA");
+                    riwayatSma.setNamaSekolah(txtNamaSekolahSMA.getText());
+                    riwayatSma.setKabupaten(txtNamaKabupatenSMA.getText());
+                    riwayatSma.setProvinsi(txtNamaProvinsiSMA.getText());
+                    riwayatSma.setTahunLulus(numTahunLulusSMA.getYear());
+                    riwayatSma.setIdCalon(idCalon);
+                    riwayatPendidikanManager.insert(riwayatSma, conn);
+
+                    Alamat alamatAyah = new Alamat();
+                    alamatAyah.setAlamat(txtAlamatAyah.getText());
+                    int idAlamatAyah = alamatManager.insert(alamatAyah, conn);
+
+                    Alamat alamatIbu = new Alamat();
+                    alamatIbu.setAlamat(txtAlamatIbu.getText());
+                    int idAlamatIbu = alamatManager.insert(alamatIbu, conn);
+
+                    BiodataOrangTua biodataOrangTua = new BiodataOrangTua();
+                    biodataOrangTua.setIdCalon(idCalon);
+                    biodataOrangTua.setIdAlamatAyah(idAlamatAyah);
+                    biodataOrangTua.setIdAlamatIbu(idAlamatIbu);
+
+                    biodataOrangTua.setNamaAyah(txtNamaAyah.getText());
+                    biodataOrangTua.setPendidikanAyah(txtPendidikanAyah.getText());
+                    biodataOrangTua.setPekerjaanAyah(txtPekerjaanAyah.getText());
+                    biodataOrangTua.setStatusAyah(comboStatusAyah.getSelectedItem().toString());
+                    biodataOrangTua.setPangkatAyah(txtPangkatAyah.getText());
+                    biodataOrangTua.setJabatanAyah(txtJabatanAyah.getText());
+                    biodataOrangTua.setInstansiAyah(txtInstansiAyah.getText());
+                    biodataOrangTua.setNoHpAyah(txtNoHpAyah.getText());
+                    biodataOrangTua.setNipAyah(txtNIPAyah.getText());
+
+                    biodataOrangTua.setNamaIbu(txtNamaIbu.getText());
+                    biodataOrangTua.setPendidikanIbu(txtPendidikanIbu.getText());
+                    biodataOrangTua.setPekerjaanIbu(txtPekerjaanIbu.getText());
+                    biodataOrangTua.setStatusIbu(comboStatusIbu.getSelectedItem().toString());
+                    biodataOrangTua.setPangkatIbu(txtPangkatIbu.getText());
+                    biodataOrangTua.setJabatanIbu(txtJabatanIbu.getText());
+                    biodataOrangTua.setInstansiIbu(txtInstansiIbu.getText());
+                    biodataOrangTua.setNoHpIbu(txtNoHpIbu.getText());
+                    biodataOrangTua.setNipIbu(txtNIPIbu.getText());
+
+                    biodataOrangTuaManager.insert(biodataOrangTua, conn);
+                } else {
+                    Alamat alamat = calon.getAlamat();
+                    alamat.setRt(Integer.parseInt(txtRt.getText()));
+                    alamat.setRw(Integer.parseInt(txtRw.getText()));
+                    alamat.setKecamatan(txtKecamatan.getText());
+                    alamat.setKabupaten(txtKabupaten.getText());
+                    alamat.setProvinsi(txtProvinsi.getText());
+                    alamat.setKodePos(Integer.parseInt(txtKodePos.getText()));
+                    alamat.setAlamat(txtAlamat.getText());
+                    alamatManager.update(alamat, conn);
+
+                    CalonMahasiswa calonMahasiswa = calon;
+                    calonMahasiswa.setNikKtp(txtNIKPeserta.getText());
+                    calonMahasiswa.setNamaLengkap(txtNamaPeserta.getText());
+                    calonMahasiswa.setTempatLahir(txtTempatLahir.getText());
+                    calonMahasiswa.setTanggalLahir(calendarTglLahir.getDate());
+                    calonMahasiswa.setAgama(comboAgama.getSelectedItem().toString());
+                    calonMahasiswa.setStatusPerkawinan(comboStatusPerkawinan.getSelectedItem().toString());
+                    calonMahasiswa.setJumlahAnak(Integer.parseInt(txtJumlahAnak.getText()));
+                    calonMahasiswa.setNisn(txtNISN.getText());
+                    calonMahasiswa.setJenisKelamnin(comboJenisKelamin.getSelectedItem().toString());
+                    calonMahasiswa.setNoTelepon(txtNoTelepon.getText());
+                    calonMahasiswa.setEmail(txtEmail.getText());
+                    ProgramStudi selected = (ProgramStudi) comboProgramStudi.getSelectedItem();
+                    calonMahasiswa.setProgramStudi(selected.getKode());
+                    calonMahasiswa.setTahunDaftar(numTahunDaftar.getYear());
+                    calonMahasiswa.setStatusPendaftaran(comboStatusPendaftaran.getSelectedItem().toString());
+                    calonMahasiswaManager.update(calonMahasiswa, conn);
+
+                    ArrayList<RiwayatPendidikan> riwayatPendidikanList = calonMahasiswa.getRiwayatPendidikan();
+
+                    for (RiwayatPendidikan riwayat : riwayatPendidikanList) {
+                        if (riwayat.getSekolah().equals("SD")) {
+                            riwayat.setNamaSekolah(txtNamaSekolahSd.getText());
+                            riwayat.setKabupaten(txtNamaKabupatenSD.getText());
+                            riwayat.setProvinsi(txtNamaProvinsiSD.getText());
+                            riwayat.setTahunLulus(numTahunLulusSD.getYear());
+                            riwayatPendidikanManager.update(riwayat, conn);
+                        }
+
+                        if (riwayat.getSekolah().equals("SMP")) {
+                            riwayat.setNamaSekolah(txtNamaSekolahSMP.getText());
+                            riwayat.setKabupaten(txtNamaKabupatenSMP.getText());
+                            riwayat.setProvinsi(txtNamaProvinsiSMP.getText());
+                            riwayat.setTahunLulus(numTahunLulusSMP.getYear());
+                            riwayatPendidikanManager.update(riwayat, conn);
+                        }
+
+                        if (riwayat.getSekolah().equals("SMA")) {
+                            riwayat.setNamaSekolah(txtNamaSekolahSMA.getText());
+                            riwayat.setKabupaten(txtNamaKabupatenSMA.getText());
+                            riwayat.setProvinsi(txtNamaProvinsiSMA.getText());
+                            riwayat.setTahunLulus(numTahunLulusSMA.getYear());
+                            riwayatPendidikanManager.update(riwayat, conn);
+                        }
+                    }
+
+                    Alamat alamatAyah = calonMahasiswa.getBiodataOrangTua().getAlamatAyah();
+                    alamatAyah.setAlamat(txtAlamatAyah.getText());
+                    alamatManager.update(alamatAyah, conn);
+
+                    Alamat alamatIbu = calonMahasiswa.getBiodataOrangTua().getAlamatIbu();
+                    alamatIbu.setAlamat(txtAlamatIbu.getText());
+                    alamatManager.update(alamatIbu, conn);
+
+                    BiodataOrangTua biodataOrangTua = calon.getBiodataOrangTua();
+
+                    biodataOrangTua.setNamaAyah(txtNamaAyah.getText());
+                    biodataOrangTua.setPendidikanAyah(txtPendidikanAyah.getText());
+                    biodataOrangTua.setPekerjaanAyah(txtPekerjaanAyah.getText());
+                    biodataOrangTua.setStatusAyah(comboStatusAyah.getSelectedItem().toString());
+                    biodataOrangTua.setPangkatAyah(txtPangkatAyah.getText());
+                    biodataOrangTua.setJabatanAyah(txtJabatanAyah.getText());
+                    biodataOrangTua.setInstansiAyah(txtInstansiAyah.getText());
+                    biodataOrangTua.setNoHpAyah(txtNoHpAyah.getText());
+                    biodataOrangTua.setNipAyah(txtNIPAyah.getText());
+
+                    biodataOrangTua.setNamaIbu(txtNamaIbu.getText());
+                    biodataOrangTua.setPendidikanIbu(txtPendidikanIbu.getText());
+                    biodataOrangTua.setPekerjaanIbu(txtPekerjaanIbu.getText());
+                    biodataOrangTua.setStatusIbu(comboStatusIbu.getSelectedItem().toString());
+                    biodataOrangTua.setPangkatIbu(txtPangkatIbu.getText());
+                    biodataOrangTua.setJabatanIbu(txtJabatanIbu.getText());
+                    biodataOrangTua.setInstansiIbu(txtInstansiIbu.getText());
+                    biodataOrangTua.setNoHpIbu(txtNoHpIbu.getText());
+                    biodataOrangTua.setNipIbu(txtNIPIbu.getText());
+
+                    biodataOrangTuaManager.update(biodataOrangTua, conn);
+                }
+
+                conn.commit();
+
+                Alert.info("Perubahan disimpan!");
+                if (onFormClosed != null) {
+                    onFormClosed.onClosed();
+                }
+                dispose();
+            } catch (SQLException e) {
+                conn.rollback();
+                Logger.error(this, e.getMessage());
+
+                txtIDPeserta.setText("");
+                txtIdCalon.setText("");
+                txtIdAlamat.setText("");
+
+                Alert.warning("Terjadi kesalahan mengubah data. Mohon coba beberapa saat lagi");
+            }
+        } catch (SQLException ex) {
+            Logger.error(this, ex.getMessage());
+
+            txtIDPeserta.setText("");
+            txtIdCalon.setText("");
+            txtIdAlamat.setText("");
+        }
+    }//GEN-LAST:event_btnSimpanActionPerformed
+
+    private void txtNIKPesertaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNIKPesertaKeyTyped
+        toNextField(evt, txtNamaPeserta);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNIKPesertaKeyTyped
+
+    private void txtJumlahAnakKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtJumlahAnakKeyTyped
+        toNextField(evt, txtNISN);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtJumlahAnakKeyTyped
+
+    private void txtNISNKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNISNKeyTyped
+        toNextField(evt, comboJenisKelamin);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNISNKeyTyped
+
+    private void txtNoTeleponKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoTeleponKeyTyped
+        toNextField(evt, txtEmail);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNoTeleponKeyTyped
+
+    private void txtNoHpAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoHpAyahKeyTyped
+        toNextField(evt, txtNIPAyah);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNoHpAyahKeyTyped
+
+    private void txtNoHpIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoHpIbuKeyTyped
+        toNextField(evt, txtNIPIbu);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtNoHpIbuKeyTyped
+
+    private void txtRtKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRtKeyTyped
+        toNextField(evt, txtRw);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtRtKeyTyped
+
+    private void txtRwKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRwKeyReleased
+        toNextField(evt, txtKecamatan);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtRwKeyReleased
+
+    private void txtKodePosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKodePosKeyTyped
+        toNextField(evt, txtAlamat);
+        if (!Character.isDigit(evt.getKeyChar())) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtKodePosKeyTyped
     private void btnKelolaBerkasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKelolaBerkasActionPerformed
         // TODO add your handling code here:
         Utils.openFrame(this, new FormBerkas(), true);
-        dispose();  
+        dispose();
     }//GEN-LAST:event_btnKelolaBerkasActionPerformed
+
+    private void txtNamaPesertaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaPesertaKeyTyped
+        toNextField(evt, txtTempatLahir);
+    }//GEN-LAST:event_txtNamaPesertaKeyTyped
+
+    private void txtTempatLahirKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTempatLahirKeyTyped
+        toNextField(evt, calendarTglLahir);
+    }//GEN-LAST:event_txtTempatLahirKeyTyped
+
+    private void comboAgamaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboAgamaKeyTyped
+        toNextField(evt, comboStatusPerkawinan);
+    }//GEN-LAST:event_comboAgamaKeyTyped
+
+    private void comboStatusPerkawinanKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboStatusPerkawinanKeyTyped
+        toNextField(evt, txtJumlahAnak);
+    }//GEN-LAST:event_comboStatusPerkawinanKeyTyped
+
+    private void comboJenisKelaminKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboJenisKelaminKeyTyped
+        toNextField(evt, txtNoTelepon);
+    }//GEN-LAST:event_comboJenisKelaminKeyTyped
+
+    private void txtEmailKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtEmailKeyTyped
+        toNextField(evt, comboProgramStudi);
+    }//GEN-LAST:event_txtEmailKeyTyped
+
+    private void comboProgramStudiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboProgramStudiKeyTyped
+        toNextField(evt, numTahunDaftar);
+    }//GEN-LAST:event_comboProgramStudiKeyTyped
+
+    private void numTahunDaftarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numTahunDaftarKeyTyped
+        toNextField(evt, comboStatusPendaftaran);
+    }//GEN-LAST:event_numTahunDaftarKeyTyped
+
+    private void comboStatusPendaftaranKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboStatusPendaftaranKeyTyped
+        toNextField(evt, txtNamaAyah);
+    }//GEN-LAST:event_comboStatusPendaftaranKeyTyped
+
+    private void txtNamaAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaAyahKeyTyped
+        toNextField(evt, txtAlamatAyah);
+    }//GEN-LAST:event_txtNamaAyahKeyTyped
+
+    private void txtAlamatAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAlamatAyahKeyTyped
+        toNextField(evt, txtPendidikanAyah);
+    }//GEN-LAST:event_txtAlamatAyahKeyTyped
+
+    private void txtPendidikanAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPendidikanAyahKeyTyped
+        toNextField(evt, txtPekerjaanAyah);
+    }//GEN-LAST:event_txtPendidikanAyahKeyTyped
+
+    private void txtPekerjaanAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPekerjaanAyahKeyTyped
+        toNextField(evt, comboStatusAyah);
+    }//GEN-LAST:event_txtPekerjaanAyahKeyTyped
+
+    private void comboStatusAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboStatusAyahKeyTyped
+        toNextField(evt, txtNoHpAyah);
+    }//GEN-LAST:event_comboStatusAyahKeyTyped
+
+    private void txtNIPAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNIPAyahKeyTyped
+        toNextField(evt, txtPangkatAyah);
+    }//GEN-LAST:event_txtNIPAyahKeyTyped
+
+    private void txtPangkatAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPangkatAyahKeyTyped
+        toNextField(evt, txtJabatanAyah);
+    }//GEN-LAST:event_txtPangkatAyahKeyTyped
+
+    private void txtJabatanAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtJabatanAyahKeyTyped
+        toNextField(evt, txtInstansiAyah);
+    }//GEN-LAST:event_txtJabatanAyahKeyTyped
+
+    private void txtInstansiAyahKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInstansiAyahKeyTyped
+        toNextField(evt, txtNamaIbu);
+    }//GEN-LAST:event_txtInstansiAyahKeyTyped
+
+    private void txtNamaIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaIbuKeyTyped
+        toNextField(evt, txtAlamatIbu);
+    }//GEN-LAST:event_txtNamaIbuKeyTyped
+
+    private void txtAlamatIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAlamatIbuKeyTyped
+        toNextField(evt, txtPendidikanIbu);
+    }//GEN-LAST:event_txtAlamatIbuKeyTyped
+
+    private void txtPendidikanIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPendidikanIbuKeyTyped
+        toNextField(evt, txtPekerjaanIbu);
+    }//GEN-LAST:event_txtPendidikanIbuKeyTyped
+
+    private void txtPekerjaanIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPekerjaanIbuKeyTyped
+        toNextField(evt, comboStatusIbu);
+    }//GEN-LAST:event_txtPekerjaanIbuKeyTyped
+
+    private void comboStatusIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_comboStatusIbuKeyTyped
+        toNextField(evt, txtNoHpIbu);
+    }//GEN-LAST:event_comboStatusIbuKeyTyped
+
+    private void txtNIPIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNIPIbuKeyTyped
+        toNextField(evt, txtPangkatIbu);
+    }//GEN-LAST:event_txtNIPIbuKeyTyped
+
+    private void txtPangkatIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPangkatIbuKeyTyped
+        toNextField(evt, txtJabatanIbu);
+    }//GEN-LAST:event_txtPangkatIbuKeyTyped
+
+    private void txtJabatanIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtJabatanIbuKeyTyped
+        toNextField(evt, txtInstansiIbu);
+    }//GEN-LAST:event_txtJabatanIbuKeyTyped
+
+    private void txtInstansiIbuKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtInstansiIbuKeyTyped
+        toNextField(evt, txtRt);
+    }//GEN-LAST:event_txtInstansiIbuKeyTyped
+
+    private void txtKecamatanKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKecamatanKeyTyped
+        toNextField(evt, txtKabupaten);
+    }//GEN-LAST:event_txtKecamatanKeyTyped
+
+    private void txtKabupatenKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKabupatenKeyTyped
+        toNextField(evt, txtProvinsi);
+    }//GEN-LAST:event_txtKabupatenKeyTyped
+
+    private void txtProvinsiKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProvinsiKeyTyped
+        toNextField(evt, txtKodePos);
+    }//GEN-LAST:event_txtProvinsiKeyTyped
+
+    private void txtAlamatKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtAlamatKeyTyped
+        toNextField(evt, txtNamaSekolahSd);
+    }//GEN-LAST:event_txtAlamatKeyTyped
+
+    private void txtNamaSekolahSdKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaSekolahSdKeyTyped
+        toNextField(evt, txtNamaKabupatenSD);
+    }//GEN-LAST:event_txtNamaSekolahSdKeyTyped
+
+    private void txtNamaKabupatenSDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaKabupatenSDKeyTyped
+        toNextField(evt, txtNamaProvinsiSD);
+    }//GEN-LAST:event_txtNamaKabupatenSDKeyTyped
+
+    private void txtNamaProvinsiSDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaProvinsiSDKeyTyped
+        toNextField(evt, numTahunLulusSD);
+    }//GEN-LAST:event_txtNamaProvinsiSDKeyTyped
+
+    private void numTahunLulusSDKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numTahunLulusSDKeyTyped
+        toNextField(evt, txtNamaSekolahSMP);
+    }//GEN-LAST:event_numTahunLulusSDKeyTyped
+
+    private void txtNamaSekolahSMPKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaSekolahSMPKeyTyped
+        toNextField(evt, txtNamaKabupatenSMP);
+    }//GEN-LAST:event_txtNamaSekolahSMPKeyTyped
+
+    private void txtNamaKabupatenSMPKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaKabupatenSMPKeyTyped
+        toNextField(evt, txtNamaProvinsiSMP);
+    }//GEN-LAST:event_txtNamaKabupatenSMPKeyTyped
+
+    private void txtNamaProvinsiSMPKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaProvinsiSMPKeyTyped
+        toNextField(evt, numTahunLulusSMP);
+    }//GEN-LAST:event_txtNamaProvinsiSMPKeyTyped
+
+    private void numTahunLulusSMPKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numTahunLulusSMPKeyTyped
+        toNextField(evt, txtNamaSekolahSMA);
+    }//GEN-LAST:event_numTahunLulusSMPKeyTyped
+
+    private void txtNamaSekolahSMAKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaSekolahSMAKeyTyped
+        toNextField(evt, txtNamaKabupatenSMA);
+    }//GEN-LAST:event_txtNamaSekolahSMAKeyTyped
+
+    private void txtNamaKabupatenSMAKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaKabupatenSMAKeyTyped
+        toNextField(evt, txtNamaProvinsiSMA);
+    }//GEN-LAST:event_txtNamaKabupatenSMAKeyTyped
+
+    private void txtNamaProvinsiSMAKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNamaProvinsiSMAKeyTyped
+        toNextField(evt, numTahunLulusSMA);
+    }//GEN-LAST:event_txtNamaProvinsiSMAKeyTyped
+
+    private void numTahunLulusSMAKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_numTahunLulusSMAKeyTyped
+        toNextField(evt, btnSimpan);
+    }//GEN-LAST:event_numTahunLulusSMAKeyTyped
 
     /**
      * @param args the command line arguments
@@ -1080,6 +2237,8 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JButton btnSimpan;
     private com.toedter.calendar.JCalendar calendarTglLahir;
     private javax.swing.JComboBox comboAgama;
+    private javax.swing.JComboBox<String> comboJenisKelamin;
+    private javax.swing.JComboBox comboProgramStudi;
     private javax.swing.JComboBox comboStatusAyah;
     private javax.swing.JComboBox comboStatusIbu;
     private javax.swing.JComboBox comboStatusPendaftaran;
@@ -1108,7 +2267,6 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
     private javax.swing.JLabel jLabel31;
-    private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
     private javax.swing.JLabel jLabel34;
     private javax.swing.JLabel jLabel35;
@@ -1177,11 +2335,11 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JScrollPane jScrollPane9;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField8;
+    private javax.swing.JLabel lblJudul;
     private com.toedter.calendar.JYearChooser numTahunDaftar;
     private com.toedter.calendar.JYearChooser numTahunLulusSD;
     private com.toedter.calendar.JYearChooser numTahunLulusSMA;
@@ -1189,7 +2347,6 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JTextPane txtAlamat;
     private javax.swing.JTextPane txtAlamatAyah;
     private javax.swing.JTextPane txtAlamatIbu;
-    private javax.swing.JComboBox txtComboProgramStudi;
     private javax.swing.JTextPane txtEmail;
     private javax.swing.JTextPane txtIDPeserta;
     private javax.swing.JTextPane txtIdAlamat;
@@ -1198,7 +2355,6 @@ public class FormTambahPeserta extends javax.swing.JFrame {
     private javax.swing.JTextPane txtInstansiIbu;
     private javax.swing.JTextPane txtJabatanAyah;
     private javax.swing.JTextPane txtJabatanIbu;
-    private javax.swing.JTextPane txtJenisKelamin;
     private javax.swing.JTextPane txtJumlahAnak;
     private javax.swing.JTextPane txtKabupaten;
     private javax.swing.JTextPane txtKecamatan;
