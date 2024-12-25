@@ -44,11 +44,25 @@ public class GedungManager {
         
         return result;
     }
+    
+    public int delete(String id) {
+        int result = 0;
+        
+        try {
+            String sql = "DELETE FROM gedung WHERE id_gedung = '" + id + "'";
+            result = Fungsi.EQuery(sql);
+        } catch (Exception e) {
+            result = -1;
+            Logger.error(this, e.getMessage());
+        }
+        
+        return result;
+    }
     public List<Gedung> getSemua(String cari) {
         ArrayList<Gedung> hasil = new ArrayList<>();
         
         try {
-            String sql = "SELECT id_gedung, nama_gedung,alamat_gedung FROM gedung WHERE nama_gedung LIKE '%" + cari + "%' OR id_gedung = '" + cari + "'";
+            String sql = "SELECT id_gedung, nama_gedung,alamat_gedung FROM gedung WHERE nama_gedung LIKE '%" +cari+ "%' OR id_gedung = '" + cari + "'";
             ResultSet res = Fungsi.getResult(sql);
             
             while (res.next()) {

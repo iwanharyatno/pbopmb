@@ -42,7 +42,7 @@ private GedungManager manager;
     }
     private void loadData() {
         try {
-            List<Gedung> result = manager.getSemua("");
+            List<Gedung> result = manager.getSemua(txtCariGedung.getText());
             tableModel.setList(result);
             
             jTableGedung.setModel(tableModel);
@@ -97,6 +97,9 @@ private GedungManager manager;
         btnubah = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtCariGedung = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -149,6 +152,11 @@ private GedungManager manager;
                 "Title 1", "Title 2", "Title 3"
             }
         ));
+        jTableGedung.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTableGedungMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(jTableGedung);
 
         btnbersih.setText("Bersihkan");
@@ -188,6 +196,26 @@ private GedungManager manager;
                 .addContainerGap())
         );
 
+        jLabel4.setText("Cari Gedung");
+
+        txtCariGedung.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCariGedungActionPerformed(evt);
+            }
+        });
+        txtCariGedung.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCariGedungKeyReleased(evt);
+            }
+        });
+
+        jButton1.setText("Hapus");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -214,12 +242,19 @@ private GedungManager manager;
                     .addGroup(layout.createSequentialGroup()
                         .addGap(23, 23, 23)
                         .addComponent(btnubah, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(62, 62, 62)
+                        .addGap(18, 18, 18)
                         .addComponent(btnbersih)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnKeluar)))
                 .addGap(30, 30, 30)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel4)
+                        .addGap(14, 14, 14)
+                        .addComponent(txtCariGedung)))
                 .addContainerGap(38, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
@@ -229,11 +264,14 @@ private GedungManager manager;
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(txtKodeGedung, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel4)
+                    .addComponent(txtCariGedung, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(txtKodeGedung, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
                             .addComponent(txtNamaGedung, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -247,8 +285,9 @@ private GedungManager manager;
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnKeluar)
                             .addComponent(btnbersih)
-                            .addComponent(btnubah)))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnubah)
+                            .addComponent(jButton1)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(74, 74, 74))
         );
 
@@ -280,13 +319,7 @@ private GedungManager manager;
         clear();
     }//GEN-LAST:event_btnbersihActionPerformed
 
-    private void jTableGedungMouseClicked(java.awt.event.MouseEvent evt) {                                           
-        int row = jTableGedung.rowAtPoint(evt.getPoint());
-
-        txtKodeGedung.setText(jTableGedung.getValueAt(row, 0).toString());
-        txtNamaGedung.setText(jTableGedung.getValueAt(row, 1).toString());
-        txtAlamatGedung.setText(jTableGedung.getValueAt(row, 2).toString());
-    } 
+ 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
         new FormUtama().setVisible(true);
         dispose();
@@ -300,6 +333,37 @@ private GedungManager manager;
             clear();
         }
     }//GEN-LAST:event_btnubahActionPerformed
+
+    private void jTableGedungMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableGedungMouseClicked
+        int row = jTableGedung.rowAtPoint(evt.getPoint());
+
+        txtKodeGedung.setText(jTableGedung.getValueAt(row, 0).toString());
+        txtNamaGedung.setText(jTableGedung.getValueAt(row, 1).toString());
+        txtAlamatGedung.setText(jTableGedung.getValueAt(row, 2).toString());
+    }//GEN-LAST:event_jTableGedungMouseClicked
+
+    private void txtCariGedungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariGedungActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCariGedungActionPerformed
+
+    private void txtCariGedungKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariGedungKeyReleased
+        loadData();
+    }//GEN-LAST:event_txtCariGedungKeyReleased
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+if (txtKodeGedung.getText().length() == 0) {
+            Alert.warning("Pilih Untuk Hapus");
+            return;
+        }
+        
+        int result = Alert.confirm("Hapus Gedung ini?");
+        if (result == JOptionPane.YES_OPTION) {
+            manager.delete(txtKodeGedung.getText());
+            loadData();
+            
+            clear();
+        }        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -328,9 +392,7 @@ private GedungManager manager;
         }
         //</editor-fold>
         //</editor-fold>
-        java.awt.EventQueue.invokeLater(() -> {
-            new FormAbout().setVisible(true);
-        });
+
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -345,14 +407,17 @@ private GedungManager manager;
     private javax.swing.JButton btnbersih;
     private javax.swing.JButton btnsimpan;
     private javax.swing.JButton btnubah;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableGedung;
     private javax.swing.JTextField txtAlamatGedung;
+    private javax.swing.JTextField txtCariGedung;
     private javax.swing.JTextField txtKodeGedung;
     private javax.swing.JTextField txtNamaGedung;
     // End of variables declaration//GEN-END:variables
