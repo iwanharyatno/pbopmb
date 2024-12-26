@@ -60,7 +60,7 @@ public class RuanganManager {
             hasil.add(new Ruangan(
                 res.getString("id_ruangan"),
                 res.getString("nama_ruangan"),
-                res.getInt("kapasitas"),
+                res.getInt("kapasitas"), 
                 res.getString("id_gedung"),
                 new Gedung(res.getString("id_gedung"), res.getString("nama_gedung"))
             ));
