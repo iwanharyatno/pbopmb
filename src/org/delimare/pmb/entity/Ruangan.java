@@ -6,6 +6,7 @@
 package org.delimare.pmb.entity;
 
 import org.delimare.pmb.gui.tables.JTableRuangan;
+import java.util.Objects;
 
 /**
  *
@@ -13,21 +14,26 @@ import org.delimare.pmb.gui.tables.JTableRuangan;
  */
 public class Ruangan {
 
-    public static void insert(Ruangan ruangan) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public static void setModel(JTableRuangan tableModel) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    private String idRuang, NamaRuang;
+   
+    private String idRuang, NamaRuang,Gedung;
     private int Kapasitas;
-     public Ruangan(String idRuang, String NamaRuang, int Kapasitas) {
+    private Gedung gedungObj;
+    
+     public Ruangan(String idRuang, String NamaRuang, int Kapasitas, String Gedung) {
         this.idRuang = idRuang;
         this.NamaRuang = NamaRuang;
         this.Kapasitas = Kapasitas;
+        this.Gedung = Gedung;
+        
        
     }
+     public Ruangan (String idRuang, String NamaRuang, int Kapasitas, String Gedung , Gedung gedungObj){
+          this.idRuang = idRuang;
+        this.NamaRuang = NamaRuang;
+        this.Kapasitas = Kapasitas;
+        this.Gedung = Gedung;
+        this.gedungObj = gedungObj;
+     }
 
     public String getIdRuang() {
         return idRuang;
@@ -45,6 +51,14 @@ public class Ruangan {
         this.NamaRuang = NamaRuang;
     }
 
+    public String getGedung() {
+        return Gedung;
+    }
+
+    public void setGedung(String Gedung) {
+        this.Gedung = Gedung;
+    }
+
     public int getKapasitas() {
         return Kapasitas;
     }
@@ -52,6 +66,43 @@ public class Ruangan {
     public void setKapasitas(int Kapasitas) {
         this.Kapasitas = Kapasitas;
     }
+
+    public Gedung getGedungObj() {
+        return gedungObj;
+    }
+
+    public void setGedungObj(Gedung gedungObj) {
+        this.gedungObj = gedungObj;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.idRuang);
+        hash = 97 * hash + Objects.hashCode(this.NamaRuang);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Ruangan other = (Ruangan) obj;
+        if (!Objects.equals(this.idRuang, other.idRuang)) {
+            return false;
+        }
+        if (!Objects.equals(this.NamaRuang, other.NamaRuang)) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
 
    
 }
