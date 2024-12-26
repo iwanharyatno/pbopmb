@@ -6,6 +6,7 @@
 package org.delimare.pmb.gui;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,6 +36,8 @@ public class FormBerkas extends javax.swing.JFrame {
     private BerkasManager manager;
     private JTableBerkas tableModel;
     private EventFormClosed onFormClosed;
+    
+    
 
     /**
      * Creates new form FormBerkas
@@ -126,8 +129,35 @@ public class FormBerkas extends javax.swing.JFrame {
             zos.closeEntry();
         }
     }
+    
+    private void createZipFromFiles(List<String> filePaths, String zipFilePath) throws IOException {
+        try (FileOutputStream fos = new FileOutputStream(zipFilePath);
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            for (String filePath : filePaths) {
+                File file = new File(filePath);
+                if (file.exists()) {
+                    ZipEntry zipEntry = new ZipEntry(file.getName());
+                    zos.putNextEntry(zipEntry);
+
+                    try (FileInputStream fis = new FileInputStream(file)) {
+                        byte[] buffer = new byte[1024];
+                        int length;
+                        while ((length = fis.read(buffer)) >= 0) {
+                            zos.write(buffer, 0, length);
+                        }
+                    }
+
+                    zos.closeEntry();
+                } else {
+                    Logger.error(this, "File tidak ditemukan: " + filePath);
+                }
+            }
+        }
+    }
+
     private void clear() {
-        txtberkas.setText("");
+        txtidberkas.setText("");
         txtNamafile.setText("");
         txtPathFile.setText("");
         
@@ -171,7 +201,7 @@ public class FormBerkas extends javax.swing.JFrame {
         txtNama = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        txtberkas = new javax.swing.JTextField();
+        txtidberkas = new javax.swing.JTextField();
         btDownload = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -192,14 +222,14 @@ public class FormBerkas extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(204, 0, 204));
 
         jLabel32.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel32.setText("Upload Berkas");
+        jLabel32.setText("Form Berkas");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(291, 291, 291)
+                .addGap(316, 316, 316)
                 .addComponent(jLabel32)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -341,7 +371,7 @@ public class FormBerkas extends javax.swing.JFrame {
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel14.setText(":");
 
-        txtberkas.setEditable(false);
+        txtidberkas.setEditable(false);
 
         btDownload.setText("Download");
         btDownload.addActionListener(new java.awt.event.ActionListener() {
@@ -399,7 +429,7 @@ public class FormBerkas extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel14)
                                             .addGap(18, 18, 18)
-                                            .addComponent(txtberkas, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addComponent(txtidberkas, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(160, 160, 160)
                                 .addComponent(btDownload)))
@@ -436,7 +466,7 @@ public class FormBerkas extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel13)
                             .addComponent(jLabel14)
-                            .addComponent(txtberkas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtidberkas, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(2, 2, 2)
@@ -552,17 +582,18 @@ public class FormBerkas extends javax.swing.JFrame {
 
     private void cb_jenisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_jenisActionPerformed
         // TODO add your handling code here:
+        clear();
     }//GEN-LAST:event_cb_jenisActionPerformed
 
     private void btn_delActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_delActionPerformed
-        if (txtberkas.getText().length() == 0) {
+        if (txtidberkas.getText().length() == 0) {
             Alert.warning("Pilih salah satu data untuk dihapus");
             return;
         }
 
         try {
         
-        int id = Integer.parseInt(txtberkas.getText());
+        int id = Integer.parseInt(txtidberkas.getText());
 
         
         
@@ -572,7 +603,7 @@ public class FormBerkas extends javax.swing.JFrame {
         if (result == JOptionPane.YES_OPTION) {
             
             manager.delete((new Berkas(
-                    txtberkas.getText(), 
+                    txtidberkas.getText(), 
                     cb_idCalon.getSelectedItem().toString(), 
                     cb_jenis.getSelectedItem().toString(),
                     txtNamafile.getText(), 
@@ -589,6 +620,7 @@ public class FormBerkas extends javax.swing.JFrame {
 
     private void cb_idCalonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_idCalonActionPerformed
         // TODO add your handling code here:
+        clear();
     }//GEN-LAST:event_cb_idCalonActionPerformed
 
     private void tb_berkasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tb_berkasMouseClicked
@@ -600,7 +632,7 @@ public class FormBerkas extends javax.swing.JFrame {
             String namaFile = tb_berkas.getValueAt(row, 3).toString();
             String pathFile = tb_berkas.getValueAt(row, 4).toString();
 
-            txtberkas.setText(idBerkas);
+            txtidberkas.setText(idBerkas);
             cb_idCalon.setSelectedItem(idCalon); 
             cb_jenis.setSelectedItem(jenisBerkas); 
             txtNamafile.setText(namaFile);
@@ -628,34 +660,34 @@ public class FormBerkas extends javax.swing.JFrame {
     }//GEN-LAST:event_cb_jenisMouseClicked
 
     private void btDownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btDownloadActionPerformed
-        // TODO add your handling code here:
-        String sourceFolderPath = "C:\\berkas\\PBO"; 
+         String idCalon = cb_idCalon.getSelectedItem().toString();
+         List<String> filePaths = manager.getFilePathsByIdCalon(idCalon);
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setDialogTitle("Pilih Lokasi untuk Menyimpan File ZIP");
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setSelectedFile(new File("berkas.zip")); 
+         if (filePaths.isEmpty()) {
+             Logger.error(this, "Tidak ada berkas untuk ID Calon: " + idCalon);
+             return;
+         }
 
-        int result = fileChooser.showSaveDialog(null);
+         JFileChooser fileChooser = new JFileChooser();
+         fileChooser.setDialogTitle("Pilih lokasi untuk menyimpan file ZIP");
+         fileChooser.setSelectedFile(new File("berkas_idCalon " + idCalon + ".zip"));
 
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File zipFile = fileChooser.getSelectedFile();
+         int userSelection = fileChooser.showSaveDialog(this);
 
-            if (!zipFile.getName().toLowerCase().endsWith(".zip")) {
-                zipFile = new File(zipFile.getAbsolutePath() + ".zip");
-            }
+         if (userSelection == JFileChooser.APPROVE_OPTION) {
+             String zipFilePath = fileChooser.getSelectedFile().getAbsolutePath();
 
-            try (FileOutputStream fos = new FileOutputStream(zipFile);
-                 ZipOutputStream zos = new ZipOutputStream(fos)) {
+             if (!zipFilePath.endsWith(".zip")) {
+                 zipFilePath += ".zip";
+             }
 
-                File sourceFolder = new File(sourceFolderPath);
-                zipFolder(sourceFolder, sourceFolder.getName(), zos);
+             try {
+                    createZipFromFiles(filePaths, zipFilePath);
+                } catch (IOException e) {
+                    Logger.error(this, "Gagal membuat file ZIP: " + e.getMessage());
+                }
 
-                JOptionPane.showMessageDialog(this, "File berhasil dikompres dan disimpan di: " + zipFile.getAbsolutePath());
-            } catch (IOException e) {
-                Logger.error(this, "Gagal mengompres file: " + e.getMessage());
-            }
-        }
+         }
     }//GEN-LAST:event_btDownloadActionPerformed
     
     
@@ -691,11 +723,9 @@ public class FormBerkas extends javax.swing.JFrame {
             public void run() {
                 new FormBerkas().setVisible(true);
             }
-        });
-        
+        }); 
         
     }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btDownload;
     private javax.swing.JButton btn_back;
@@ -728,7 +758,7 @@ public class FormBerkas extends javax.swing.JFrame {
     private javax.swing.JTextField txtNama;
     private javax.swing.JTextField txtNamafile;
     private javax.swing.JTextField txtPathFile;
-    private javax.swing.JTextField txtberkas;
+    private javax.swing.JTextField txtidberkas;
     // End of variables declaration//GEN-END:variables
 
     

@@ -21,7 +21,8 @@ public class BerkasManager {
         int result = 0;
         
         try {
-            String sql = "INSERT INTO berkas_pendaftaran (id_calon,jenis_berkas, nama_file, path_file) VALUES ('"+ bk.getId_calon()+"', '" + bk.getJenisberkas() + "', '" + bk.getNamaberkas() + "','"+ bk.getPathfile()+"')";;
+            String sql = "INSERT INTO berkas_pendaftaran (id_calon,jenis_berkas, nama_file, path_file) VALUES ('"+ bk.getId_calon()+"', '" 
+                    + bk.getJenisberkas() + "', '" + bk.getNamaberkas() + "','"+ bk.getPathfile()+"')";;
             result = Fungsi.EQuery(sql);
         } catch (Exception e) {
             result = -1;
@@ -49,7 +50,8 @@ public class BerkasManager {
         ArrayList<Berkas> hasil = new ArrayList<>();
         
         try {
-            String sql = "SELECT id_berkas, id_calon,jenis_berkas, nama_file,path_file FROM berkas_pendaftaran WHERE id_berkas LIKE '%" + cari + "%' OR id_calon = '" + cari + "'";
+            String sql = "SELECT id_berkas, id_calon,jenis_berkas, nama_file,path_file FROM berkas_pendaftaran WHERE id_berkas LIKE '%" 
+                    + cari + "%' OR id_calon = '" + cari + "'";
             ResultSet res = Fungsi.getResult(sql);
             
             while (res.next()) {
@@ -103,6 +105,20 @@ public class BerkasManager {
     return namaCalon;
     }
 
+    public List<String> getFilePathsByIdCalon(String idCalon) {
+        List<String> filePaths = new ArrayList<>();
+        try {
+            String sql = "SELECT path_file FROM berkas_pendaftaran WHERE id_calon = '" + idCalon + "'";
+            ResultSet res = Fungsi.getResult(sql);
+
+            while (res.next()) {
+                filePaths.add(res.getString("path_file"));
+            }
+        } catch (Exception e) {
+            Logger.error(this, "Error mendapatkan path file: " + e.getMessage());
+        }
+        return filePaths;
+    }
 
 
 }
