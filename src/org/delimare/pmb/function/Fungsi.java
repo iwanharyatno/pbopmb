@@ -68,4 +68,16 @@ public class Fungsi {
 
         return result;
     }
+    
+    public static Statement getResults(String sql) throws SQLException {
+        int i = 0;
+
+        boolean result;
+
+        Connection con = db.getConnection();
+        PreparedStatement st = con.prepareStatement(sql);
+        result = st.execute();
+
+        return st;
+    }
 }
