@@ -101,7 +101,15 @@ private GedungManager manager;
         txtCariGedung = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setText("Kode gedung");
 
@@ -321,9 +329,13 @@ private GedungManager manager;
 
  
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
+        exit();
+    }//GEN-LAST:event_btnKeluarActionPerformed
+
+    private void exit() {
         new FormRuangan().setVisible(true);
         dispose();
-    }//GEN-LAST:event_btnKeluarActionPerformed
+    }
 
     private void btnubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnubahActionPerformed
         if (inputValid()) {
@@ -364,6 +376,14 @@ if (txtKodeGedung.getText().length() == 0) {
             clear();
         }        // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        exit();        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

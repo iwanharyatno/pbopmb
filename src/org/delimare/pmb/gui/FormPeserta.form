@@ -8,6 +8,10 @@
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
     <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowClosed" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosed"/>
+    <EventHandler event="windowClosing" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosing"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -26,7 +30,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="1085" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="btn_simpan" pref="147" max="32767" attributes="0"/>
@@ -37,15 +41,19 @@
                           <Component id="btnTambahPeserta" max="32767" attributes="0"/>
                           <Component id="btnUbah" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="711" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btnUbahStatus" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnCetakReport" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                              <Component id="btnCetakReport" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="615" max="32767" attributes="0"/>
                       <Component id="jLabel2" min="-2" pref="41" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="txtCari" min="-2" pref="244" max="-2" attributes="0"/>
@@ -77,6 +85,7 @@
                   <Component id="btn_hapus" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnTambahPeserta" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnCetakReport" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -137,13 +146,19 @@
     </Container>
     <Component class="javax.swing.JButton" name="btn_simpan">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Simpan"/>
+        <Property name="text" type="java.lang.String" value="Keluar"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_simpanActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btn_hapus">
       <Properties>
         <Property name="text" type="java.lang.String" value="Hapus"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_hapusActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnTambahPeserta">
       <Properties>
@@ -195,6 +210,14 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCariActionPerformed"/>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCariKeyReleased"/>
         <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCariKeyTyped"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButton1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Cetak Jadwal"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

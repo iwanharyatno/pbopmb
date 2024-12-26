@@ -68,6 +68,17 @@ public class Fungsi {
 
         return result;
     }
+
+    public static ResultSet getResult(String sql, Connection con) throws SQLException {
+        int i = 0;
+
+        ResultSet result = null;
+
+        Statement st = con.createStatement();
+        result = st.executeQuery(sql);
+
+        return result;
+    }
     
     public static Statement getResults(String sql) throws SQLException {
         int i = 0;

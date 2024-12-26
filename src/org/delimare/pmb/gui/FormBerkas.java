@@ -41,6 +41,9 @@ public class FormBerkas extends javax.swing.JFrame {
      */
     public FormBerkas() {
         initComponents();
+        
+        setLocationRelativeTo(null);
+        
         manager = new BerkasManager();
         List<Integer> idCalonList = manager.getAllIdCalon();
         
@@ -542,9 +545,7 @@ public class FormBerkas extends javax.swing.JFrame {
             );
 
             if (confirm == JOptionPane.YES_OPTION) {
-                Utils.openFrame(this, new FormTambahPeserta(), true);
                 dispose();  
-                
             }
         
     }//GEN-LAST:event_btn_backActionPerformed
