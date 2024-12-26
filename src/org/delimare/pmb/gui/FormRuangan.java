@@ -34,6 +34,8 @@ public class FormRuangan extends javax.swing.JFrame {
     public FormRuangan() {
         initComponents();
         
+        setLocationRelativeTo(null);
+        
         init();
     }
     
@@ -114,7 +116,15 @@ public class FormRuangan extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
         jLabel1.setText("RUANGAN");
@@ -343,10 +353,22 @@ public class FormRuangan extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCariRuangKeyReleased
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-         new FormUtama().setVisible(true);
-        dispose();
+         exit();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        exit();
+        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
+
+    private void exit() {
+        // TODO add your handling code here:
+        new FormUtama().setVisible(true);
+        dispose();
+    }
 
     /**
      * @param args the command line arguments

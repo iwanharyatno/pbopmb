@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" language="groovy" printOrder="Horizontal" pageWidth="1008" pageHeight="612" orientation="Landscape" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="478aee5a-e04b-4469-a70e-7373389be70e">
 	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="123"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<queryString>
-		<![CDATA[SELECT jadwal.id_jadwal, calon_mahasiswa.nama_lengkap, calon_mahasiswa.program_studi, jadwal.nomor_meja, jadwal.waktu, ruangan.nama_ruangan FROM jadwal INNER JOIN ruangan ON ruangan.id_ruangan = jadwal.id_ruangan INNER JOIN calon_mahasiswa ON calon_mahasiswa.id_calon = jadwal.id_calon ORDER BY jadwal.id_jadwal ASC;]]>
+		<![CDATA[SELECT jadwal.id_jadwal, calon_mahasiswa.nama_lengkap, calon_mahasiswa.program_studi, jadwal.nomor_meja, jadwal.waktu, ruangan.nama_ruangan, gedung.nama_gedung, program_studi.nama_prodi FROM jadwal INNER JOIN ruangan ON ruangan.id_ruangan = jadwal.id_ruangan INNER JOIN calon_mahasiswa ON calon_mahasiswa.id_calon = jadwal.id_calon INNER JOIN gedung ON gedung.id_gedung = ruangan.id_gedung INNER JOIN program_studi ON calon_mahasiswa.program_studi = program_studi.kode_prodi ORDER BY jadwal.id_jadwal ASC;]]>
 	</queryString>
 	<field name="id_jadwal" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -24,32 +24,38 @@
 	<field name="nama_ruangan" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="nama_gedung" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_prodi" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
 			<rectangle>
-				<reportElement x="429" y="50" width="580" height="4" backcolor="#9900CC" uuid="f3e039e8-94b4-4b52-bb36-87bd392cb275"/>
+				<reportElement x="408" y="50" width="580" height="4" backcolor="#9900CC" uuid="f3e039e8-94b4-4b52-bb36-87bd392cb275"/>
 				<graphicElement>
 					<pen lineWidth="0.0"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="167" y="10" width="821" height="32" forecolor="#9900CC" uuid="80691f28-6bb4-4877-8f2f-7a1b1715146c"/>
+				<reportElement x="146" y="10" width="821" height="32" forecolor="#9900CC" uuid="80691f28-6bb4-4877-8f2f-7a1b1715146c"/>
 				<textElement textAlignment="Left">
 					<font size="24" isBold="true"/>
 				</textElement>
 				<text><![CDATA[JADWAL UJIAN TERTULIS CALON MAHASISWA BARU]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="0" y="0" width="154" height="77" backcolor="#CCCCFF" uuid="5ed962c5-8677-416b-9fac-b55a9634fcce"/>
+				<reportElement x="-21" y="0" width="154" height="77" backcolor="#CCCCFF" uuid="5ed962c5-8677-416b-9fac-b55a9634fcce"/>
 				<graphicElement>
 					<pen lineWidth="0.0" lineStyle="Solid"/>
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="167" y="42" width="244" height="23" forecolor="#666666" uuid="c69d68b1-0505-4e81-a130-8746051a27a8"/>
+				<reportElement x="146" y="42" width="244" height="23" forecolor="#666666" uuid="c69d68b1-0505-4e81-a130-8746051a27a8"/>
 				<textElement>
 					<font size="12"/>
 				</textElement>
@@ -66,39 +72,39 @@
 				</graphicElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="0" y="19" width="100" height="28" uuid="ccf664e4-a550-4efd-8cf1-7a1fe15a50b0"/>
+				<reportElement x="0" y="19" width="83" height="28" uuid="ccf664e4-a550-4efd-8cf1-7a1fe15a50b0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="8"/>
 				</textElement>
-				<text><![CDATA[id_jadwal]]></text>
+				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="100" y="19" width="287" height="28" uuid="327a2d22-be30-4091-a600-962ff64e0a50"/>
+				<reportElement x="83" y="19" width="222" height="28" uuid="327a2d22-be30-4091-a600-962ff64e0a50"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="8"/>
 				</textElement>
-				<text><![CDATA[nama_lengkap]]></text>
+				<text><![CDATA[NAMA LENGKAP]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="387" y="19" width="164" height="28" uuid="99864983-24a7-4b53-bb93-c0449d87fd5e"/>
+				<reportElement x="305" y="19" width="164" height="28" uuid="99864983-24a7-4b53-bb93-c0449d87fd5e"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="8"/>
 				</textElement>
-				<text><![CDATA[program_studi]]></text>
+				<text><![CDATA[PROGRAM STUDI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="551" y="19" width="100" height="28" uuid="722843de-f606-45d8-83ee-2320dc5329f7"/>
+				<reportElement x="469" y="19" width="81" height="28" uuid="722843de-f606-45d8-83ee-2320dc5329f7"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="8"/>
 				</textElement>
-				<text><![CDATA[nomor_meja]]></text>
+				<text><![CDATA[NO MEJA]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="790" y="19" width="178" height="28" uuid="45b76bf1-123d-46dd-ab86-972e21037a1b"/>
+				<reportElement x="823" y="19" width="145" height="28" uuid="45b76bf1-123d-46dd-ab86-972e21037a1b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="8"/>
@@ -106,19 +112,27 @@
 				<text><![CDATA[waktu]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="651" y="19" width="139" height="28" uuid="add22800-0607-4b1a-987a-a71926451970"/>
+				<reportElement x="550" y="19" width="139" height="28" uuid="add22800-0607-4b1a-987a-a71926451970"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 					<paragraph leftIndent="8"/>
 				</textElement>
-				<text><![CDATA[nama_ruangan]]></text>
+				<text><![CDATA[NAMA RUANGAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="689" y="19" width="134" height="28" uuid="6fa8faf8-6d07-4426-b0df-ac94291bece8"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<text><![CDATA[NAMA GEDUNG]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="26" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="26" uuid="31924ca2-4e17-474f-a555-8108db6655a0"/>
+				<reportElement x="0" y="0" width="83" height="26" uuid="31924ca2-4e17-474f-a555-8108db6655a0"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 					<paragraph leftIndent="8"/>
@@ -126,7 +140,7 @@
 				<textFieldExpression><![CDATA[$F{id_jadwal}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="100" y="0" width="287" height="26" uuid="ddf84060-cadd-4d04-9e05-89ad9fffb4e3"/>
+				<reportElement x="83" y="0" width="222" height="26" uuid="ddf84060-cadd-4d04-9e05-89ad9fffb4e3"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 					<paragraph leftIndent="8"/>
@@ -134,15 +148,15 @@
 				<textFieldExpression><![CDATA[$F{nama_lengkap}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="387" y="0" width="164" height="26" uuid="a84b7f1d-34d9-4a66-98af-26a89152b103"/>
+				<reportElement x="305" y="0" width="164" height="26" uuid="a84b7f1d-34d9-4a66-98af-26a89152b103"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 					<paragraph leftIndent="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{program_studi}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nama_prodi}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="551" y="0" width="100" height="26" uuid="e0914945-f090-490d-813f-bf67110de04f"/>
+				<reportElement x="469" y="0" width="81" height="26" uuid="e0914945-f090-490d-813f-bf67110de04f"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 					<paragraph leftIndent="8"/>
@@ -150,7 +164,7 @@
 				<textFieldExpression><![CDATA[$F{nomor_meja}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd MMMM yyyy, HH:mm">
-				<reportElement x="790" y="0" width="178" height="26" uuid="792f5781-dc7b-4ab3-a370-c4287284cf4b"/>
+				<reportElement x="823" y="0" width="145" height="26" uuid="792f5781-dc7b-4ab3-a370-c4287284cf4b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 					<paragraph leftIndent="8"/>
@@ -158,12 +172,20 @@
 				<textFieldExpression><![CDATA[$F{waktu}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="651" y="0" width="139" height="26" uuid="254859ba-3b4a-4c10-8b8e-5de3435904e8"/>
+				<reportElement x="550" y="0" width="139" height="26" uuid="254859ba-3b4a-4c10-8b8e-5de3435904e8"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 					<paragraph leftIndent="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nama_ruangan}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="689" y="0" width="134" height="26" uuid="6643cc5c-50e7-4ac9-811f-2cd07ed5ab5f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+					<paragraph leftIndent="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nama_gedung}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

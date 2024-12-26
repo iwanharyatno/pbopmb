@@ -127,7 +127,15 @@ public class FormProgramStudi extends javax.swing.JFrame {
         txtCariProdi = new javax.swing.JTextField();
         btnBersihkan = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel2.setText("Nama Program Studi");
 
@@ -347,9 +355,13 @@ public class FormProgramStudi extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
+        exit();
+    }//GEN-LAST:event_btnKeluarActionPerformed
+
+    private void exit() {
         new FormUtama().setVisible(true);
         dispose();
-    }//GEN-LAST:event_btnKeluarActionPerformed
+    }
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         if (inputValid()) {
@@ -440,6 +452,14 @@ public class FormProgramStudi extends javax.swing.JFrame {
     private void txtCariProdiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCariProdiActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCariProdiActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        exit();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

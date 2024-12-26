@@ -38,6 +38,9 @@ public class FormBerkas extends javax.swing.JFrame {
      */
     public FormBerkas() {
         initComponents();
+        
+        setLocationRelativeTo(null);
+        
         manager = new BerkasManager();
         List<Integer> idCalonList = manager.getAllIdCalon();
         

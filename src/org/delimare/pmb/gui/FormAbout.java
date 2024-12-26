@@ -25,6 +25,8 @@ public class FormAbout extends javax.swing.JFrame {
      */
     public FormAbout() {
         initComponents();
+
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -70,9 +72,14 @@ public class FormAbout extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         jButton5 = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
         setLocation(new java.awt.Point(0, 0));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/delimare/pmb/assets/dominic.png"))); // NOI18N
         jLabel1.setText("jLabel1");
@@ -403,12 +410,16 @@ public class FormAbout extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        Utils.openFrame(this, new FormUtama(), true);
-        dispose();
+        exit();
     }//GEN-LAST:event_jButton8ActionPerformed
 
+    private void exit() {
+        Utils.openFrame(this, new FormUtama(), false);
+        dispose();
+    }
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-try {
+        try {
             openWebpage(new URL("https://www.instagram.com/dominic_dinand/"));       // TODO add your handling code here:
         } catch (MalformedURLException ex) {
             Logger.getLogger(FormAbout.class.getName()).log(Level.SEVERE, null, ex);
@@ -416,7 +427,7 @@ try {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-       try {
+        try {
             openWebpage(new URL("https://www.instagram.com/_iwan.h/"));       // TODO add your handling code here:
         } catch (MalformedURLException ex) {
             Logger.getLogger(FormAbout.class.getName()).log(Level.SEVERE, null, ex);
@@ -432,25 +443,25 @@ try {
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-    try {
+        try {
             openWebpage(new URL("https://www.instagram.com/dendi_ptrp/"));       // TODO add your handling code here:
         } catch (MalformedURLException ex) {
             Logger.getLogger(FormAbout.class.getName()).log(Level.SEVERE, null, ex);
         }
-                // TODO add your handling code here:
+        // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-       try {
-            openWebpage(new URL("https://www.instagram.com/itsmizuuu_/"));       
+        try {
+            openWebpage(new URL("https://www.instagram.com/itsmizuuu_/"));
         } catch (MalformedURLException ex) {
             Logger.getLogger(FormAbout.class.getName()).log(Level.SEVERE, null, ex);
-        } 
+        }
     }//GEN-LAST:event_jButton10ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         try {
-            openWebpage(new URL("https://www.instagram.com/froncasye_/"));       
+            openWebpage(new URL("https://www.instagram.com/froncasye_/"));
         } catch (MalformedURLException ex) {
             Logger.getLogger(FormAbout.class.getName()).log(Level.SEVERE, null, ex);
         }// TODO add your handling code here:
@@ -460,7 +471,10 @@ try {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        exit();
+    }//GEN-LAST:event_formWindowClosing
+
     /**
      * @param args the command line arguments
      */
@@ -493,27 +507,28 @@ try {
             new FormAbout().setVisible(true);
         });
     }
+
     public static boolean openWebpage(URI uri) {
-    Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
-    if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+        Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+        if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(uri);
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public static boolean openWebpage(URL url) {
         try {
-            desktop.browse(uri);
-            return true;
-        } catch (Exception e) {
+            return openWebpage(url.toURI());
+        } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        return false;
     }
-    return false;
-}
-
-public static boolean openWebpage(URL url) {
-    try {
-        return openWebpage(url.toURI());
-    } catch (URISyntaxException e) {
-        e.printStackTrace();
-    }
-    return false;
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

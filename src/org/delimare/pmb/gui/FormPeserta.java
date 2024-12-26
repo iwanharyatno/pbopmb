@@ -8,6 +8,7 @@ package org.delimare.pmb.gui;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -83,6 +84,14 @@ public class FormPeserta extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         tablePeserta.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -186,7 +195,7 @@ public class FormPeserta extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnTambahPeserta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(btnUbah, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 567, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnUbahStatus, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -195,7 +204,7 @@ public class FormPeserta extends javax.swing.JFrame {
                                 .addComponent(btnCetakReport))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 615, Short.MAX_VALUE)
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -276,7 +285,9 @@ public class FormPeserta extends javax.swing.JFrame {
             String path = current + "/src/org/delimare/pmb/gui/reports/CalonMahasiswaReport.jasper";
             JasperReport jr = (JasperReport) JRLoader.loadObject(new FileInputStream(new File(path)));
             JasperPrint jp = JasperFillManager.fillReport(jr, null, db.getConnection());
-            JasperViewer.viewReport(jp);
+            JasperViewer viewer = new JasperViewer(jp, false);
+            viewer.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            viewer.setVisible(true);
         } catch (JRException ex) {
             Logger.error(this, ex.getMessage());
         } catch (FileNotFoundException ex) {
@@ -313,8 +324,12 @@ public class FormPeserta extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCariKeyReleased
 
     private void btn_simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_simpanActionPerformed
-        Utils.openFrame(this, new FormUtama(), true);
+        exit();
     }//GEN-LAST:event_btn_simpanActionPerformed
+
+    private void exit() {
+        Utils.openFrame(this, new FormUtama(), true);
+    }
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
@@ -322,7 +337,9 @@ public class FormPeserta extends javax.swing.JFrame {
             String path = current + "/src/org/delimare/pmb/gui/reports/JadwalUjianReport.jasper";
             JasperReport jr = (JasperReport) JRLoader.loadObject(new FileInputStream(new File(path)));
             JasperPrint jp = JasperFillManager.fillReport(jr, null, db.getConnection());
-            JasperViewer.viewReport(jp);
+            JasperViewer viewer = new JasperViewer(jp, false);
+            viewer.setExtendedState(JFrame.MAXIMIZED_BOTH);
+            viewer.setVisible(true);
         } catch (JRException ex) {
             Logger.error(this, ex.getMessage());
         } catch (FileNotFoundException ex) {
@@ -342,6 +359,13 @@ public class FormPeserta extends javax.swing.JFrame {
             loadData();
         }
     }//GEN-LAST:event_btn_hapusActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+    }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        exit();        // TODO add your handling code here:
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

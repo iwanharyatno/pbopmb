@@ -81,7 +81,7 @@ public class FormPengaturan extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         timeMulai = new lu.tudor.santec.jtimechooser.JTimeChooser();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Pengaturan Jadwal");
