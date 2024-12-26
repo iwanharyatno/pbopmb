@@ -1671,7 +1671,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                     biodataOrangTua.setNamaAyah(txtNamaAyah.getText());
                     biodataOrangTua.setPendidikanAyah(txtPendidikanAyah.getText());
                     biodataOrangTua.setPekerjaanAyah(txtPekerjaanAyah.getText());
-                    biodataOrangTua.setStatusAyah(comboStatusAyah.getSelectedItem().toString());
+                    biodataOrangTua.setStatusAyah(comboStatusAyah.getSelectedItem() != null ? comboStatusAyah.getSelectedItem().toString() : null);
                     biodataOrangTua.setPangkatAyah(txtPangkatAyah.getText());
                     biodataOrangTua.setJabatanAyah(txtJabatanAyah.getText());
                     biodataOrangTua.setInstansiAyah(txtInstansiAyah.getText());
@@ -1681,7 +1681,7 @@ public class FormTambahPeserta extends javax.swing.JFrame {
                     biodataOrangTua.setNamaIbu(txtNamaIbu.getText());
                     biodataOrangTua.setPendidikanIbu(txtPendidikanIbu.getText());
                     biodataOrangTua.setPekerjaanIbu(txtPekerjaanIbu.getText());
-                    biodataOrangTua.setStatusIbu(comboStatusIbu.getSelectedItem().toString());
+                    biodataOrangTua.setStatusIbu(comboStatusIbu.getSelectedItem() != null ? comboStatusIbu.getSelectedItem().toString() : null);
                     biodataOrangTua.setPangkatIbu(txtPangkatIbu.getText());
                     biodataOrangTua.setJabatanIbu(txtJabatanIbu.getText());
                     biodataOrangTua.setInstansiIbu(txtInstansiIbu.getText());
