@@ -3,6 +3,30 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Alamat.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormGedung.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/GedungManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormFakultas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/AlamatManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/tables/JTablePeserta.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Berkas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/FakultasManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormPeserta.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Gedung.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormAbout.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Fakultas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/PesertaManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/ProgramStudiManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entitymanager/BerkasManager.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/tables/JTableBerkas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/ProgramStudi.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormBerkas.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/entity/Agama.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/tables/JTableGedung.java</file>
+            <file>file:/D:/Kuliah/Semester%203/PBO/projekakhir/pbopmb/src/org/delimare/pmb/gui/FormUtama.java</file>
+=======
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/Jadwal.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entitymanager/JadwalManager.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormProgramStudi.java</file>
@@ -45,6 +69,7 @@
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/gui/FormLogin.java</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/nbproject/private/private.xml</file>
             <file>file:/D:/Universitas/Pemrograman%20Berorientasi%20Objek/Projek%20Akhir/pbopmb/src/org/delimare/pmb/entity/Pengaturan.java</file>
+>>>>>>> 639f918a74f27d1156703172d157f4d6fca10d39
         </group>
     </open-files>
 </project-private>
