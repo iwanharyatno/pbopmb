@@ -321,7 +321,7 @@ private GedungManager manager;
 
  
     private void btnKeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKeluarActionPerformed
-        new FormUtama().setVisible(true);
+        new FormRuangan().setVisible(true);
         dispose();
     }//GEN-LAST:event_btnKeluarActionPerformed
 

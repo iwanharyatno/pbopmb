@@ -35,7 +35,7 @@ public abstract class JTableRuangan extends AbstractTableModel{
 
     @Override
     public int getColumnCount() {
-        return 3;
+        return 5;
     }
 
     @Override
@@ -44,6 +44,8 @@ public abstract class JTableRuangan extends AbstractTableModel{
             case 0: return list.get(rowIndex).getIdRuang();
             case 1: return list.get(rowIndex).getNamaRuang();
             case 2: return list.get(rowIndex).getKapasitas();
+            case 3: return list.get(rowIndex).getGedung();
+            case 4: return list.get(rowIndex).getGedungObj().getNamagedung();    
           
             default: return null;
         }
@@ -55,7 +57,8 @@ public abstract class JTableRuangan extends AbstractTableModel{
             case 0: return "KODE RUANG";
             case 1: return "NAMA RUANGAN";
             case 2: return "KAPASITAS";
-                        
+            case 3: return "KODE GEDUNG";
+             case 4: return "GEDUNG";    
             default: return "";
         }
     }

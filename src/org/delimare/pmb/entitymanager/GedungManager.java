@@ -62,7 +62,8 @@ public class GedungManager {
         ArrayList<Gedung> hasil = new ArrayList<>();
         
         try {
-            String sql = "SELECT id_gedung, nama_gedung,alamat_gedung FROM gedung WHERE nama_gedung LIKE '%" +cari+ "%' OR id_gedung = '" + cari + "'";
+            
+            String sql = "SELECT id_gedung, nama_gedung,alamat_gedung FROM gedung WHERE nama_gedung LIKE '%" + cari + "%' OR id_gedung LIKE '%" + cari +  "%'" ;
             ResultSet res = Fungsi.getResult(sql);
             
             while (res.next()) {
