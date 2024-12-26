@@ -575,7 +575,6 @@
                           <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jScrollPane17" min="-2" pref="178" max="-2" attributes="0"/>
-                              <Component id="comboStatusAyah" min="-2" pref="103" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="jScrollPane4" alignment="0" pref="182" max="32767" attributes="0"/>
                                   <Component id="jScrollPane6" alignment="0" max="32767" attributes="0"/>
@@ -586,7 +585,10 @@
                               <Component id="jScrollPane14" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
                               <Component id="jScrollPane16" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
                               <Component id="jScrollPane20" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
-                              <Component id="jScrollPane22" min="-2" pref="178" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="comboStatusAyah" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jScrollPane22" alignment="0" pref="178" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <Component id="jLabel18" min="-2" max="-2" attributes="0"/>
@@ -614,19 +616,17 @@
                                       </Group>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Component id="jScrollPane31" min="-2" pref="178" max="-2" attributes="0"/>
-                                      <Component id="jScrollPane24" min="-2" pref="182" max="-2" attributes="0"/>
-                                      <Component id="comboStatusIbu" alignment="0" min="-2" pref="103" max="-2" attributes="0"/>
-                                      <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="jScrollPane18" alignment="0" pref="182" max="32767" attributes="0"/>
-                                          <Component id="jScrollPane25" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jScrollPane26" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="jScrollPane29" alignment="0" max="32767" attributes="0"/>
-                                      </Group>
+                                      <Component id="jScrollPane24" pref="182" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane18" alignment="0" pref="182" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane25" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane26" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="jScrollPane29" alignment="0" max="32767" attributes="0"/>
                                       <Component id="jScrollPane27" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
                                       <Component id="jScrollPane30" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
                                       <Component id="jScrollPane28" alignment="0" min="-2" pref="178" max="-2" attributes="0"/>
+                                      <Component id="comboStatusIbu" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
@@ -872,7 +872,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel25">
           <Properties>
-            <Property name="text" type="java.lang.String" value="STATUS AYAH"/>
+            <Property name="text" type="java.lang.String" value="STATUS"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel26">
@@ -903,11 +903,10 @@
         <Component class="javax.swing.JComboBox" name="comboStatusAyah">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
+              <StringArray count="3">
+                <StringItem index="0" value="Aktif"/>
+                <StringItem index="1" value="Pensiunan"/>
+                <StringItem index="2" value="Lainnya"/>
               </StringArray>
             </Property>
           </Properties>
@@ -1099,7 +1098,7 @@
         </Container>
         <Component class="javax.swing.JLabel" name="jLabel37">
           <Properties>
-            <Property name="text" type="java.lang.String" value="STATUS IBU"/>
+            <Property name="text" type="java.lang.String" value="STATUS"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel38">
@@ -1144,11 +1143,10 @@
         <Component class="javax.swing.JComboBox" name="comboStatusIbu">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Item 1"/>
-                <StringItem index="1" value="Item 2"/>
-                <StringItem index="2" value="Item 3"/>
-                <StringItem index="3" value="Item 4"/>
+              <StringArray count="3">
+                <StringItem index="0" value="Aktif"/>
+                <StringItem index="1" value="Pensiunan"/>
+                <StringItem index="2" value="Lainnya"/>
               </StringArray>
             </Property>
           </Properties>

@@ -46,4 +46,18 @@ public class PesertaManager {
         
         return hasil;
     }
+    
+    public int delete(int id) {
+        int result = 0;
+
+        try {
+            String sql = "DELETE FROM calon_mahasiswa WHERE id_calon = " + id + ";";
+            result = Fungsi.EQuery(sql);
+        } catch (Exception e) {
+            result = -1;
+            Logger.error(this, e.getMessage());
+        }
+
+        return result;
+    }
 }
