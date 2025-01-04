@@ -527,7 +527,7 @@ public class FormBerkas extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_browseActionPerformed
 
     private void btn_uploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_uploadActionPerformed
-        // Tentukan folder target untuk menyimpan file
+    // Tentukan folder target untuk menyimpan file
     Path targetFolderPath = Paths.get("C:", "berkas", "PBO"); 
 
     if (inputValid()) {
@@ -536,26 +536,38 @@ public class FormBerkas extends javax.swing.JFrame {
         if (selectedFile.exists()) {
             try {
                 
-                Path targetFilePath = targetFolderPath.resolve(selectedFile.getName());
-                Files.copy(selectedFile.toPath(), targetFilePath, StandardCopyOption.REPLACE_EXISTING);
-
+                String jenis = cb_jenis.getSelectedItem().toString();
+                String idCalon = cb_idCalon.getSelectedItem().toString();
                 
-                String fixedPath = targetFilePath.toString().replace("\\", "/");
-                txtPathFile.setText(fixedPath);
-                txtNamafile.setText(selectedFile.getName());
-
-               
-                manager.insert(new Berkas(
-                    "", 
-                    cb_idCalon.getSelectedItem().toString(), 
-                    cb_jenis.getSelectedItem().toString(),
-                    txtNamafile.getText(), 
-                    txtPathFile.getText() 
-                ));
-
                 
-                loadData();
-                clear();
+                String fileExtension = selectedFile.getName().substring(selectedFile.getName().lastIndexOf("."));
+                String newFileName = jenis + "_" + idCalon + fileExtension;
+                
+                Path targetFilePath = targetFolderPath.resolve(newFileName);
+                
+                
+                if (Files.exists(targetFilePath)) {
+                    JOptionPane.showMessageDialog(this, "File dengan jenis '" + jenis + "' dan ID calon '" + idCalon + "' sudah ada.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                } else {
+                    Files.copy(selectedFile.toPath(), targetFilePath, StandardCopyOption.REPLACE_EXISTING);
+
+                    String fixedPath = targetFilePath.toString().replace("\\", "/");
+                    txtPathFile.setText(fixedPath);
+                    txtNamafile.setText(newFileName);
+
+                    manager.insert(new Berkas(
+                        "", 
+                        idCalon, 
+                        jenis,
+                        newFileName, 
+                        fixedPath
+                    ));
+
+                    loadData();
+                    clear();
+
+                    JOptionPane.showMessageDialog(this, "File berhasil diunggah dengan nama: " + newFileName, "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                }
 
             } catch (IOException e) {
                 Logger.error(this, "Gagal menyalin file: " + e.getMessage());
@@ -597,10 +609,7 @@ public class FormBerkas extends javax.swing.JFrame {
         
         int id = Integer.parseInt(txtidberkas.getText());
 
-        
-        
-
-        // Tanyakan konfirmasi penghapusan
+   
         int result = Alert.confirm("Yakin ingin menghapus data berkas ini?");
         if (result == JOptionPane.YES_OPTION) {
             
@@ -614,8 +623,9 @@ public class FormBerkas extends javax.swing.JFrame {
             loadData();  
             clear();  
         }
+        
     } catch (NumberFormatException e) {
-        // Tangani error jika ID tidak valid
+        
         Alert.warning("ID berkas harus berupa angka");
     }
     }//GEN-LAST:event_btn_delActionPerformed
@@ -634,13 +644,9 @@ public class FormBerkas extends javax.swing.JFrame {
             String namaFile = tb_berkas.getValueAt(row, 3).toString();
             String pathFile = tb_berkas.getValueAt(row, 4).toString();
 
-            if (idBerkas != null && !idBerkas.isEmpty()) {
-            txtidberkas.setText(idBerkas);
-            } else {
-                Logger.error(this, "idBerkas kosong atau null");
-            }
             cb_idCalon.setSelectedItem(idCalon); 
             cb_jenis.setSelectedItem(jenisBerkas); 
+            txtidberkas.setText(idBerkas);
             txtNamafile.setText(namaFile);
             txtPathFile.setText(pathFile);
     }

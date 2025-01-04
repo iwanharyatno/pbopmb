@@ -36,7 +36,7 @@ public class BerkasManager {
         int result = 0;
         
         try {
-        // Gunakan bk.getId() untuk mengambil ID
+        
         String sql = "DELETE FROM berkas_pendaftaran WHERE id_berkas = '" + bk.getId_berkas()+ "'";
         result = Fungsi.EQuery(sql);
     } catch (Exception e) {
@@ -88,13 +88,13 @@ public class BerkasManager {
     public String getNamaCalonById(Integer idCalon) {
     String namaCalon = null;
     try {
-        // SQL query tanpa parameter placeholder
+        
         String sql = "SELECT nama_lengkap FROM calon_mahasiswa WHERE id_calon = '" + idCalon + "'";
         
-        // Menjalankan query menggunakan Statement
+        
         ResultSet res = Fungsi.getResult(sql);
         
-        // Jika ada hasil, ambil nama calon
+        
         if (res.next()) {
             namaCalon = res.getString("nama_lengkap");
         }
